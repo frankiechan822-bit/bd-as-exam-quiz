@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="zh-HK" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HK Buildings Department Authorized Signatory (AS) Exam Simulator | 屋宇署獲授權簽署人MC模擬考試平台</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Inter & Noto Sans TC Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f5fa',
+              100: '#e1ecf5',
+              500: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              gold: '#d97706',
+              goldDark: '#b45309'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    
+    /* Subtle pulse animation for timer below 5 mins */
+    @keyframes urgentPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .timer-urgent {
+      animation: urgentPulse 1.5s infinite ease-in-out;
+      color: #ef4444 !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-full flex flex-col font-sans transition-colors duration-200">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-brand-900 to-brand-500 flex items-center justify-center text-white shadow-md">
+          <i class="fa-solid fa-building-shield text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+              BD AS Exam Master
+            </h1>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+              PNRC 38 App. P
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block">
+            屋宇署獲授權簽署人 MC 全真模擬系統 (45分鐘 · 30題)
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center space-x-1 sm:space-x-2">
+        <button id="tabBtnSimulator" onclick="switchMainTab('simulator')" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300">
+          <i class="fa-solid fa-stopwatch mr-1.5"></i>考試模擬器
+        </button>
+        <button id="tabBtnSyllabus" onclick="switchMainTab('syllabus')" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="fa-solid fa-book-bookmark mr-1.5"></i>法例與PNRC精讀
+        </button>
+        <button id="tabBtnGithub" onclick="openGithubModal()" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="fa-brands fa-github mr-1.5"></i>GitHub 部署
+        </button>
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" title="切換深色/淺色模式">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:inline"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================= VIEW 1: EXAM SIMULATOR ================= -->
+    <section id="viewSimulator" class="space-y-6">
+
+      <!-- Exam Control & Session Header -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-3">
+            <span id="sessionBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span id="sessionTitle">早晨卷 (Morning Session 09:00)</span>
+            </span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">
+              系統每日 09:00 及 18:00 自動刷新 30 題全真考題
+            </span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-1">
+            獲授權簽署人法定資格評核試 (Authorized Signatory MC Exam)
+          </h2>
+          <div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-slate-600 dark:text-slate-400 mt-1">
+            <span><i class="fa-regular fa-clock text-brand-500 mr-1"></i>時限：<strong>45 分鐘</strong></span>
+            <span><i class="fa-solid fa-list-ol text-brand-500 mr-1"></i>題目：<strong>30 條情境題</strong></span>
+            <span><i class="fa-solid fa-bullseye text-brand-500 mr-1"></i>及格標準：<strong>70% (答對 21/30)</strong></span>
+            <span><i class="fa-solid fa-shuffle text-brand-500 mr-1"></i>真題庫總數：<strong id="totalPoolCount">--</strong> 題</span>
+          </div>
+        </div>
+
+        <!-- Session Selector & Generator Actions -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 bg-slate-50 dark:bg-slate-800 text-xs font-medium">
+            <button id="btnSetMorning" onclick="setSession('morning')" class="px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">
+              <i class="fa-solid fa-sun text-amber-500 mr-1"></i>早晨卷
+            </button>
+            <button id="btnSetEvening" onclick="setSession('evening')" class="px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900">
+              <i class="fa-solid fa-moon text-indigo-400 mr-1"></i>傍晚卷
+            </button>
+          </div>
+          <button onclick="regenerateRandomExam()" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold transition-colors flex items-center">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i>隨機抽樣換卷
+          </button>
+        </div>
+      </div>
+
+      <!-- TIMER & STATUS BAR -->
+      <div class="sticky top-16 z-30 bg-slate-900 text-white rounded-xl px-4 py-3 shadow-md flex items-center justify-between border border-slate-800">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-hourglass-half text-amber-400 text-base"></i>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold hidden sm:inline">剩餘時間</span>
+            <span id="timerDisplay" class="font-mono text-xl sm:text-2xl font-bold tracking-tight text-amber-400">45:00</span>
+          </div>
+          <button id="btnTimerToggle" onclick="toggleTimer()" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+            <i class="fa-solid fa-pause mr-1" id="timerIcon"></i><span id="timerActionText">暫停</span>
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="text-right text-xs">
+            <span class="text-slate-400 hidden sm:inline">答題進度:</span>
+            <span id="progressStats" class="font-bold text-white font-mono ml-1">0 / 30</span>
+          </div>
+          <div class="w-24 sm:w-36 h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-brand-500 to-emerald-500 w-0 transition-all duration-300"></div>
+          </div>
+          <button onclick="confirmSubmitExam()" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition-transform active:scale-95 flex items-center">
+            <i class="fa-solid fa-paper-plane mr-1.5"></i>交卷評分
+          </button>
+        </div>
+      </div>
+
+      <!-- EXAM WORKSPACE: PALETTE + QUESTION CARD -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+
+        <!-- Question Navigation Palette (1 to 30) -->
+        <div class="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <i class="fa-solid fa-table-cells mr-1.5"></i>答題導航卡 (1–30)
+            </h3>
+            <span id="flaggedCountBadge" class="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
+              <i class="fa-solid fa-flag mr-1"></i>0 待覆核
+            </span>
+          </div>
+
+          <!-- 30 Palette Buttons Grid -->
+          <div id="paletteGrid" class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-5 gap-2">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center"><span class="w-3 h-3 rounded bg-brand-500 mr-2"></span>已回答</span>
+              <span id="legendAnswered" class="font-bold text-slate-700 dark:text-slate-200">0</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center"><span class="w-3 h-3 rounded bg-amber-500 mr-2"></span>標記覆核 (Flagged)</span>
+              <span id="legendFlagged" class="font-bold text-amber-600 dark:text-amber-400">0</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center"><span class="w-3 h-3 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 mr-2"></span>未作答</span>
+              <span id="legendUnanswered" class="font-bold text-slate-700 dark:text-slate-200">30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Question Active Card -->
+        <div class="lg:col-span-3 space-y-4">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm relative">
+            
+            <!-- Question Top Metadata -->
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <div class="flex items-center space-x-2">
+                <span id="qIndexBadge" class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold bg-brand-100 dark:bg-brand-900/60 text-brand-800 dark:text-brand-300">
+                  Question 1 / 30
+                </span>
+                <span id="qCategoryBadge" class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+                  Statutory Duty & s.9
+                </span>
+              </div>
+              <button id="btnFlagCurrent" onclick="toggleFlagCurrentQuestion()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium transition-colors flex items-center">
+                <i class="fa-regular fa-flag text-amber-500 mr-1.5" id="flagIcon"></i><span id="flagText">標記此題稍後覆核</span>
+              </button>
+            </div>
+
+            <!-- Scenario Stem -->
+            <div class="mb-6">
+              <p id="qScenarioText" class="text-base sm:text-lg leading-relaxed text-slate-900 dark:text-slate-100 font-medium">
+                載入題目中...
+              </p>
+            </div>
+
+            <!-- Options Radio List -->
+            <div id="qOptionsContainer" class="space-y-3">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="mt-8 pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <button id="btnPrev" onclick="navigateQuestion(-1)" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left mr-1.5"></i>上一題
+              </button>
+              <div class="text-xs text-slate-400 font-medium">
+                提示：可使用鍵盤數字鍵 1-4 選擇答案，← → 切換題目
+              </div>
+              <button id="btnNext" onclick="navigateQuestion(1)" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-brand-700 hover:bg-brand-600 text-white shadow-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                下一題<i class="fa-solid fa-chevron-right ml-1.5"></i>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= RESULT REPORT MODAL / PANEL ================= -->
+      <div id="examResultSection" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-lg text-center">
+          <div id="resultStatusIcon" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-300">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <h3 id="resultTitle" class="text-2xl font-extrabold text-slate-900 dark:text-white">
+            考試評核完成 (Examination Submitted)
+          </h3>
+          <p id="resultSubtitle" class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            屋宇署獲授權簽署人評核標準：及格需達到 70% (21/30)
+          </p>
+
+          <!-- Score Metrics Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6 max-w-2xl mx-auto">
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+              <span class="text-xs text-slate-400 uppercase font-semibold">得分 / 總題數</span>
+              <div id="scoreRatioDisplay" class="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">-- / 30</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+              <span class="text-xs text-slate-400 uppercase font-semibold">及格百分比</span>
+              <div id="scorePercentageDisplay" class="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">--%</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+              <span class="text-xs text-slate-400 uppercase font-semibold">評審判定</span>
+              <div id="passVerdictBadge" class="text-lg font-bold mt-1.5 text-emerald-600 dark:text-emerald-400">合格 (PASS)</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+              <span class="text-xs text-slate-400 uppercase font-semibold">用時 (Time Used)</span>
+              <div id="timeUsedDisplay" class="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">--:--</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-center gap-3">
+            <button onclick="scrollToReviewSection()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-brand-700 hover:bg-brand-600 text-white shadow transition-all">
+              <i class="fa-solid fa-list-check mr-2"></i>查看逐題詳細法定依據與解析
+            </button>
+            <button onclick="resetAndRestartExam()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all">
+              <i class="fa-solid fa-rotate-right mr-2"></i>重新作答此卷
+            </button>
+          </div>
+        </div>
+
+        <!-- Detailed Review List -->
+        <div id="reviewContainer" class="space-y-4">
+          <h4 class="text-lg font-bold text-slate-900 dark:text-white flex items-center">
+            <i class="fa-solid fa-scale-balanced text-brand-500 mr-2"></i>考題法定條例全解析 (Statutory Analysis & Rationale)
+          </h4>
+          <div id="reviewQuestionsList" class="space-y-4">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= VIEW 2: SYLLABUS & CHECKLIST ================= -->
+    <section id="viewSyllabus" class="hidden space-y-6">
+      
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center">
+          <i class="fa-solid fa-graduation-cap text-brand-500 mr-2.5"></i>
+          獲授權簽署人 (Authorized Signatory) 考試必讀法定架構總目錄
+        </h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          根據屋宇署 PNRC 38 附錄 I、K 及 P，MC 筆試聚焦於建築物條例（第123章）、指定表格生命週期、地盤安全監督計劃 (SSPS) 與承建商法定非轉委責任。
+        </p>
+
+        <!-- Category Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+
+          <!-- Col 1: Cap 123 Essential Sections -->
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3">
+            <h3 class="text-sm font-bold text-brand-900 dark:text-brand-300 uppercase tracking-wider flex items-center">
+              <i class="fa-solid fa-gavel mr-2"></i>建築物條例 (Cap. 123) 核心條文
+            </h3>
+            <ul class="text-xs space-y-2 text-slate-700 dark:text-slate-300">
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>s. 9 (5): 註冊承建商法定責任</strong><br>
+                (a) 持續監督; (b) 出現重大偏離/結構缺陷即時書面通知BA; (c) 確保物料品質符合核准圖則及規例。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>s. 14 (1): 雙重門檻 (Approval & Consent)</strong><br>
+                工程必須同時取得核准圖則及屋宇署書面同意 (Consent) 方可開工。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>s. 23: 停工令 (Cease Works Order)</strong><br>
+                當進行中工程可能導致鄰近建築物或土地倒塌或造成危險時，BA發出之法定停工手令。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>s. 24 / 24B: 違例建築物 (UBW) 清拆令</strong><br>
+                對已完成之違法工程發出清拆/改動命令。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>s. 40 (1AA), (2A), (2B): 刑事法律責任</strong><br>
+                虛假陳述/核證 ($100萬 + 3年監禁)；明知而嚴重偏離圖則 ($100萬 + 3年監禁)；工程導致人身受傷或財產損壞 ($100萬 + 3年監禁)。
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 2: Specified Forms Lifecycles -->
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3">
+            <h3 class="text-sm font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center">
+              <i class="fa-solid fa-file-signature mr-2"></i>屋宇署法定指定表格 (Specified Forms)
+            </h3>
+            <ul class="text-xs space-y-2 text-slate-700 dark:text-slate-300">
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>Form BA8: 委聘承建商通知書</strong><br>
+                AP、業主與承建商簽署，正式向BA提報委任RGBC或RSC。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>Form BA10: 開工意向通知書</strong><br>
+                必須於預計動工日前<strong>最少 7 天</strong>送達屋宇署，並連同地盤安全監督計劃書 (SSPS)。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>Form BA12 / BA13: 完工證書與入伙紙 (OP)</strong><br>
+                申請新建築物佔用許可證 (OP)，由AP、RSE及AS共同聯署。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>Form BA14 / BA14A: 工程完工證明書</strong><br>
+                BA14 為一般建築工程 (RGBC)，BA14A 為專業工程 (RSC: 基礎/ELS/拆卸等)。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>小型工程表格 (MW01 – MW06)</strong><br>
+                MW01/02 (第I級)、MW03/04 (第II級)、MW05/06 (第III級開工及完工簡化申報)。
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Practice Notes & B(A)R -->
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3">
+            <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider flex items-center">
+              <i class="fa-solid fa-clipboard-check mr-2"></i>PNRC 作業備考與附屬規例
+            </h3>
+            <ul class="text-xs space-y-2 text-slate-700 dark:text-slate-300">
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>PNRC 38: 承建商註冊與 AS 面試/筆試</strong><br>
+                AS資歷門檻、評核程序、3次面試不合格之1年冷卻期 (Debarment rule)。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>PNRC 4: 遮蓋行人通道與高架門架 (Gantry)</strong><br>
+                淨高<strong>最低 2.5 m</strong>，淨闊<strong>最低 1.1 m</strong>，頂部雙層防護防墜板。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>PNRC 14: 鐵路保護區工程 (RPZ)</strong><br>
+                默認 Alert 警報沉降門檻為 <strong>20 mm</strong>，必須同時提交監測圖表予港鐵及屋宇署。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>PNRC 52 (APP-55): 輕微修訂 (Minor Amendments)</strong><br>
+                不牽涉結構安全、避難走火與法定間距之非結構改動，方可容許於BA14呈交竣工圖前整合。
+              </li>
+              <li class="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong>B(A)R 規例 10, 11, 26, 27</strong><br>
+                Reg. 10 (地盤必須存備核准圖則及日誌)；Reg. 11 (紀錄保留不少於12個月)；Reg. 27 (工程停工超過2個月復工前需7天書面通知)。
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= GITHUB PAGES DEPLOYMENT MODAL ================= -->
+    <div id="githubModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center space-x-2">
+            <i class="fa-brands fa-github text-xl text-slate-900 dark:text-white"></i>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">GitHub Pages 2分鐘極速免費部署指引</h3>
+          </div>
+          <button onclick="closeGithubModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p>
+            本模擬系統為<strong>單一 HTML 檔案完全自包含架構 (Single-file Zero Dependency)</strong>，無需安裝 Node.js 或後端伺服器，直接託管於 GitHub Pages 即可上線供手機、平板及電腦隨時刷題：
+          </p>
+          <div class="bg-slate-950 text-slate-200 p-3 rounded-lg font-mono text-xs overflow-x-auto space-y-1">
+            <div class="text-slate-500"># 1. 建立本機資料夾並將此檔案命名為 index.html</div>
+            <div>git init</div>
+            <div>git add index.html</div>
+            <div>git commit -m "feat: initial release of BD AS Exam Simulator"</div>
+            <div class="text-slate-500 mt-2"># 2. 於 GitHub 新建 Public Repo 並推行 (Push)</div>
+            <div>git remote add origin https://github.com/&lt;YOUR-USERNAME&gt;/bd-as-exam-simulator.git</div>
+            <div>git branch -M main</div>
+            <div>git push -u origin main</div>
+          </div>
+          <div class="p-3 bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-800 rounded-lg text-xs space-y-1 text-brand-900 dark:text-brand-200">
+            <strong><i class="fa-solid fa-globe mr-1"></i>啟用 GitHub Pages 步驟：</strong>
+            <ol class="list-decimal list-inside space-y-0.5 mt-1">
+              <li>進入 GitHub Repo 頁面 ➔ 點擊上方 <strong>Settings</strong>。</li>
+              <li>左側選單點擊 <strong>Pages</strong>。</li>
+              <li>在 <strong>Branch</strong> 下拉選單選擇 <code>main</code>，資料夾選擇 <code>/(root)</code>，點擊 <strong>Save</strong>。</li>
+              <li>約 60 秒後，您的專屬網址即生成：<code>https://&lt;YOUR-USERNAME&gt;.github.io/bd-as-exam-simulator/</code></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+          <button onclick="closeGithubModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand-700 hover:bg-brand-600 text-white">
+            了解並關閉
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
+      <div>
+        © 2026 HK Registered Contractor AS Exam Drill Platform · 遵照香港法例第123章《建築物條例》及 PNRC 38 備考指引
+      </div>
+      <div class="flex items-center space-x-3">
+        <span>每日早晨/傍晚自動更新試卷</span>
+        <span>·</span>
+        <span>單一 HTML GitHub Pages 隨選即用</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT: APPLICATION LOGIC ================= -->
+  <script>
+    /* ====================================================================
+       1. EXHAUSTIVE QUESTION POOL FOR BD AS EXAMINATION (SCENARIO-BASED)
+       Each question follows authentic BD testing methods: legal traps, 
+       strict liability, Section 40 mens rea, SSPS stream boundaries, and 
+       specified forms lifecycle.
+       ==================================================================== */
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        category: "Statutory Duties (s.9)",
+        scenario: "During the casting of a critical 15th-floor reinforced concrete transfer plate, ready-mixed concrete supply is abruptly delayed for 4 hours due to a traffic breakdown, resulting in an unplanned cold joint at mid-span of a primary transfer girder. The RSE attends site, issues a written site instruction directing high-strength epoxy bonding agent preparation for resuming casting, and tells the AS: 'This is an engineering matter; no need to report to the BD.' The AS follows this instruction without informing the Building Authority. Which statement represents the AS's legal liability under Cap. 123?",
+        options: [
+          "A. The AS has committed no offense because an RSE has statutory authority under Section 4 to prescribe structural remedial details.",
+          "B. The AS is liable under Section 9(5)(b) for failing to notify the Building Authority of a material structural divergence or defect affecting safety.",
+          "C. The AS is fully protected under Section 40(2A) as long as the concrete passes subsequent 28-day core compression tests.",
+          "D. The AS is liable to disciplinary action under Section 13, but the Building Authority has no jurisdiction to issue a Cease Works Order."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 9(5)(b) & Section 40(2A)",
+        rationale: "Under s.9(5)(b) of the Buildings Ordinance, an RGBC/AS has an independent, non-delegable duty to notify the BA of any material divergence or defect. An unplanned cold joint across a primary transfer girder alters the structural casting sequence and affects integrity. Even if the RSE issues a site memo, the AS cannot conceal the divergence from the Building Authority."
+      },
+      {
+        id: 2,
+        category: "Consent & Timelines (s.14 & B(A)R)",
+        scenario: "An RGBC receives valid consent under Section 14 to commence excavation and lateral support (ELS) works on February 1. Due to contractual disputes between the developer and main contractor, plant mobilization is delayed and no physical work occurs on site for 75 days. On Day 76, the dispute resolves and the contractor intends to begin driving sheet piles. What is the statutory requirement before driving the first pile?",
+        options: [
+          "A. The RGBC must apply for re-validation under B(A)R Regulation 27 because works have been suspended for more than 2 months.",
+          "B. The RGBC can commence works provided Form BA10 was served at least 7 days prior to commencement and the physical start date falls within 3 months of the consent grant.",
+          "C. The RGBC must submit a brand new plan approval application under Section 14(1) because consent lapses after 60 days.",
+          "D. The AS must submit Form BA14A within 48 hours of starting the piling rig."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 14 & B(A)R Regulation 27",
+        rationale: "Under the Buildings Ordinance, a Section 14 consent remains valid for 3 months from its date of issue. To commence lawfully, the RGBC must submit Form BA10 giving not less than 7 days' prior notice. Regulation 27 (the 2-month suspension rule) applies only AFTER works have physically commenced and then stopped for >2 months."
+      },
+      {
+        id: 3,
+        category: "Geotechnical Monitoring (APP-137)",
+        scenario: "During deep basement excavation near pre-war buildings, an inclinometer installed behind the sheet pile wall registers a lateral deflection of 38 mm. The approved criteria in the ELS plan are: Alert 20 mm, Alarm 30 mm, Action 35 mm. Pavement settlement markers show 22 mm (Action 20 mm). The site agent requests the AS to continue excavation at night to quickly cast the base slab. What is the AS's mandatory statutory action under the SSPS and PNAP APP-137?",
+        options: [
+          "A. Accelerate excavation around the clock to reach formation level and cast the concrete raft as early as possible.",
+          "B. Suspend all excavation immediately, execute agreed contingency measures (e.g., berm backfilling or strut pre-loading), and notify the BD, AP, RSE, and RGE in writing.",
+          "C. Continue excavation but increase inclinometer reading frequency from daily to hourly until 45 mm is reached.",
+          "D. Reset the baseline of the monitoring instruments to compensate for thermal expansion of steel struts."
+        ],
+        correct: 1,
+        statutoryRef: "PNAP APP-137 & Code of Practice for Site Safety Supervision",
+        rationale: "When monitoring exceeds the Action trigger (and Alarm trigger), mandatory immediate suspension of works and implementation of contingency measures are required. Continuing excavation risks catastrophic collapse and exposes the AS to criminal prosecution under Section 40(2B) for carrying out works in a dangerous manner."
+      },
+      {
+        id: 4,
+        category: "Minor Amendments (PNAP APP-55)",
+        scenario: "The client instructs the RGBC in writing to omit two non-structural internal drywall partitions and relocate an internal non-rated domestic door by 1.2 m. The AP issues a site instruction stating this will be incorporated into the record plans upon completion under PNAP APP-55. Under what condition can the AS execute this work without risking prosecution under Section 40(2A)?",
+        options: [
+          "A. Under no condition, because any site alteration without prior written BD approval is a strict liability crime under s.40(2A).",
+          "B. Only if the contractor holds an additional Registered Minor Works Contractor (Class I) qualification.",
+          "C. Provided the modification does not affect structural stability, does not contravene fire escape / health regulations, and as-built plans are certified by the AP on or before Form BA14 submission.",
+          "D. Only if the developer provides a signed bank guarantee indemnifying the contractor from government penalties."
+        ],
+        correct: 2,
+        statutoryRef: "PNAP APP-55 / PNRC 52 & BO Section 40(2A)",
+        rationale: "Under PNAP APP-55 / PNRC 52, non-structural modifications that do not affect structural members, Means of Escape, or planning regulations can be executed under the Minor Amendment mechanism and regularized prior to or upon Form BA14 submission."
+      },
+      {
+        id: 5,
+        category: "Site Safety Supervision (SSPS)",
+        scenario: "On a complex foundation site, the designated Technically Competent Person Grade T3 (TCP T3, Contractor's Stream) unexpectedly resigns. The Authorized Signatory holds a recognized degree in Civil Engineering, is a Registered Professional Engineer (RPE), and has 8 years of site supervision experience. Can the AS legally cover the duties of TCP T3 (Contractor's Stream) while recruiting a replacement?",
+        options: [
+          "A. No, an AS is strictly prohibited by statute from undertaking any TCP role on any project they supervise.",
+          "B. Yes, under the SSPS Code, an AS or Technical Director may concurrently act as a TCP in the Contractor's Stream provided they meet the academic and experience criteria for that grade.",
+          "C. No, an AS can only act as a TCP in the AP/RSE stream to avoid conflict of interest.",
+          "D. Yes, but only with prior written dispensation from the Labour Department under Cap. 59."
+        ],
+        correct: 1,
+        statutoryRef: "Code of Practice for Site Safety Supervision (Table 5.1 & 5.2)",
+        rationale: "Under the SSPS Code, an AS or Technical Director is permitted to concurrently serve as a TCP in the CONTRACTOR'S STREAM if they satisfy the qualification and experience prerequisites. However, cross-stream appointments (serving concurrently in the AP/RSE Stream and Contractor Stream) are strictly prohibited."
+      },
+      {
+        id: 6,
+        category: "Enforcement Powers (s.23 vs s.24)",
+        scenario: "During mechanical demolition of an 8-storey commercial building, heavy concrete rubble accumulates on the 5th-floor slab, reaching a surcharge of 5.5 kPa against an allowable design limit of 1.5 kPa. Deep flexural cracks appear on the slab soffit. Which statutory instrument can the Building Authority serve to halt works immediately, and under which section?",
+        options: [
+          "A. Demolition Order under Section 24.",
+          "B. Cease Works Order under Section 23.",
+          "C. Disciplinary Order under Section 13(4).",
+          "D. Dangerous Hillside Order under Section 27A."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 23",
+        rationale: "Section 23 of the Buildings Ordinance specifically empowers the Building Authority to issue a Cease Works Order where building works render an adjoining building, structure, street, or land liable to collapse or cause serious danger. Section 24 applies to unauthorized building works already completed."
+      },
+      {
+        id: 7,
+        category: "Contractor Registration (PNRC 38)",
+        scenario: "An RGBC has one sole Authorized Signatory registered on the Buildings Department register. While active superstructure works are proceeding under Form BA10, the AS suddenly passes away. The firm has a qualified Technical Director and several senior project managers. What is the mandatory legal consequence for the site?",
+        options: [
+          "A. The Technical Director automatically acts as the AS for up to 6 months without notifying the BD.",
+          "B. Active building works must cease immediately; no further works can lawfully proceed until a new AS is accepted and approved by the BD.",
+          "C. Works can proceed uninterrupted provided the Authorized Person assumes continuous site supervision.",
+          "D. Works can continue for 90 days provided written notice is submitted to the Labour Department."
+        ],
+        correct: 1,
+        statutoryRef: "PNRC 38 & BO Section 9",
+        rationale: "Under PNRC 38, an RGBC cannot lawfully execute building works without an approved Authorized Signatory actively in place. If the sole AS leaves or passes away, works must cease immediately until a qualified replacement AS is vetted and approved by the BD/CRC."
+      },
+      {
+        id: 8,
+        category: "Railway Protection (PNRC 14)",
+        scenario: "An RGBC is executing basement excavation within the Railway Protection Zone (RPZ). Automated settlement markers along the running tunnel railway track indicate an accumulated vertical movement of 21 mm. The pre-agreed criteria are: Alert 20 mm, Alarm 25 mm, Action 30 mm. What is the mandatory statutory step for the AS?",
+        options: [
+          "A. Continue excavation but increase dewatering to lower the water table.",
+          "B. Immediately issue formal written notification and monitoring plots to both the Building Authority and the MTR Corporation, and review excavation sequences.",
+          "C. Apply for a Section 42 exemption to increase the Alert threshold to 35 mm.",
+          "D. Halt all passenger train operations on that section of the MTR line immediately."
+        ],
+        correct: 1,
+        statutoryRef: "PNRC 14",
+        rationale: "Under PNRC 14, breaching the Alert threshold (default 20 mm) triggers mandatory immediate reporting to both the BD Railway Protection Unit and MTRC. It requires an urgent review of trend data to prevent reaching the Alarm or Action thresholds."
+      },
+      {
+        id: 9,
+        category: "Criminal Liability (s.40(1AA))",
+        scenario: "An AS co-signs and submits Form BA14 (Certificate of Completion) certifying that building works are completed according to approved plans and statutory regulations. However, the AS knows that the plumbing sub-contractor omitted backflow preventers from the potable water supply pipework. What criminal penalty does the AS face under Section 40(1AA)?",
+        options: [
+          "A. A maximum fine of $5,000 without criminal conviction.",
+          "B. A fine of $1,000,000 and imprisonment for 3 years for knowingly making a false certification or declaration.",
+          "C. Civil damages payable to the Water Supplies Department only.",
+          "D. Automatic revocation of the contractor's Business Registration Certificate."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 40(1AA)",
+        rationale: "Under s.40(1AA) of Cap. 123, any person who knowingly certifies or declares in any plan, certificate, or document submitted to the BA any matter which is false or misleading in a material respect commits a serious offense carrying a $1,000,000 fine and 3 years' imprisonment."
+      },
+      {
+        id: 10,
+        category: "Hoardings & Walkways (PNRC 4)",
+        scenario: "Under Practice Note for Registered Contractors 4 (PNRC 4) and Building (Planning) Regulations Part IX, what is the mandatory minimum vertical clear headroom and unobstructed width for a covered walkway erected over a public footpath?",
+        options: [
+          "A. Minimum clear headroom of 2.5 m and minimum clear width of 1.1 m (or footpath width, whichever is less).",
+          "B. Minimum clear headroom of 2.0 m and width of 1.5 m.",
+          "C. Minimum clear headroom of 3.0 m and width of 2.0 m.",
+          "D. Headroom equal to the floor-to-floor height of the ground floor."
+        ],
+        correct: 0,
+        statutoryRef: "PNRC 4 & B(P)R Part IX",
+        rationale: "PNRC 4 mandates that covered walkways erected over public footpaths must maintain at least 2.5 m clear vertical headroom and at least 1.1 m clear unobstructed walking width to safeguard pedestrian movement."
+      },
+      {
+        id: 11,
+        category: "Means of Escape & OP (s.21)",
+        scenario: "During a joint final statutory inspection prior to the issue of an Occupation Permit (OP), the BD inspects a primary exit corridor. The approved plans require a clear width of 1,200 mm. Due to masonry construction tolerances, the actual clear width is measured at 1,060 mm. How will the Building Authority respond under Section 21?",
+        options: [
+          "A. Issue a Temporary Occupation Permit (TOP) subject to a minor administrative fine.",
+          "B. Refuse to issue an Occupation Permit under Section 21 because the corridor contravenes statutory Means of Escape regulations and approved drawings.",
+          "C. The AP has statutory power under Section 4 to grant an on-site waiver overriding the Fire Safety Code.",
+          "D. The AS can rectify this simply by submitting Form BA14A."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 21 & Fire Safety Code",
+        rationale: "Under s.21 of the Buildings Ordinance, the BA must refuse an Occupation Permit if the building works contravene building regulations or approved plans. Reducing escape corridor widths compromises fire safety and cannot be regularized on site."
+      },
+      {
+        id: 12,
+        category: "Material Compliance (s.9(5)(c))",
+        scenario: "Four truck mixers arrive to pour high-strength transfer columns (Grade C60). The delivery tickets indicate C60, but site slump tests reveal 240 mm (allowable: 120 mm ± 30 mm) with visible segregation. The concrete supplier says extra retarder and water were added to ease pumping. The Project Director threatens to dismiss the AS if the pour is canceled. What is the AS's legal duty?",
+        options: [
+          "A. Pour the concrete into columns and rely on the concrete supplier's delivery ticket for legal protection.",
+          "B. Reject the non-compliant concrete batches immediately and prevent their placement into permanent structural works under Section 9(5)(c).",
+          "C. Add site cement powder into the truck drum to absorb excess water.",
+          "D. Accept the concrete provided core compression tests are conducted 28 days later."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 9(5)(c) & Concrete Code",
+        rationale: "Section 9(5)(c) imposes a strict, non-delegable duty on the contractor and AS to ensure materials used comply with regulations and approved specifications. Commercial pressure does not excuse pouring segregated, non-compliant concrete."
+      },
+      {
+        id: 13,
+        category: "Suspension of Works (B(A)R Reg. 27)",
+        scenario: "A project completed foundation works in January. Due to financing restructuring, the site remained completely inactive for 3 consecutive months. In May, new funding is secured and the RGBC prepares to resume deep excavation. What statutory notice must be served to the BD before resuming works?",
+        options: [
+          "A. No notice is needed because the original consent remains valid indefinitely.",
+          "B. Written notice in the specified form not less than 7 days prior to resuming building works under B(A)R Regulation 27.",
+          "C. A brand new general building plan submission under Section 14.",
+          "D. Form BA12 submitted directly to the Commissioner for Labour."
+        ],
+        correct: 1,
+        statutoryRef: "B(A)R Regulation 27",
+        rationale: "Under Regulation 27 of the Building (Administration) Regulations, when building works have been suspended for more than 2 months, the contractor must serve not less than 7 days' prior notice in writing in the specified form to the BA before resuming works."
+      },
+      {
+        id: 14,
+        category: "Site Records (B(A)R Reg. 10)",
+        scenario: "Under Regulation 10 of the Building (Administration) Regulations and the SSPS Code, which of the following documents is an Authorized Signatory legally required to keep on site available at all times during working hours for inspection by BD officers?",
+        options: [
+          "A. The Main Contract priced Bills of Quantities and employer payment certificates.",
+          "B. Certified copies of approved plans, the Site Safety Supervision Plan, and the Site Safety Logbook updated by TCPs.",
+          "C. The contractor's corporate tax filings and audited accounts.",
+          "D. Confidential internal human resources employment contracts."
+        ],
+        correct: 1,
+        statutoryRef: "B(A)R Regulation 10",
+        rationale: "B(A)R Regulation 10 mandates that certified copies of approved plans, supervision plans, and test/supervisory records (including the Site Safety Logbook) must be kept on site at all times during construction."
+      },
+      {
+        id: 15,
+        category: "Non-Delegable Duties (s.9 vs s.40(2B))",
+        scenario: "A heavy-duty catch-fan along an external bamboo/metal hybrid scaffold collapses onto a public footpath during hoisting, damaging parked vehicles. The AS argues that the scaffold was subcontracted to a registered scaffolding specialist with a back-to-back safety indemnity clause. Does this contractual clause protect the AS from statutory liability under Cap. 123?",
+        options: [
+          "A. Yes, because main contractors are not liable for independent specialized subcontractors.",
+          "B. No, statutory duties of continuous supervision under Section 9 and criminal liability under Section 40(2B) are non-delegable and cannot be transferred via private contracts.",
+          "C. Yes, provided the subcontractor was registered under the Subcontractor Registration Scheme.",
+          "D. Yes, provided the scaffold had been inspected by a Competent Person 14 days earlier."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 9 & Section 40(2B)",
+        rationale: "Statutory obligations imposed on Registered Contractors and their Authorized Signatories under the Buildings Ordinance are strictly non-delegable. Commercial indemnities allocate civil cost between private firms but cannot extinguish criminal liability."
+      },
+      {
+        id: 16,
+        category: "Conditions on Consent (s.17)",
+        scenario: "When approving foundation plans in an area with complex marble cavity geology, the Building Authority imposes conditions under Section 17(1). Which of the following is a standard condition imposed under this section?",
+        options: [
+          "A. Requiring the contractor to pay a 10% royalty on extracted marble to the Lands Department.",
+          "B. Requiring proof drilling, borehole pre-drilling at each pile location, and continuous geotechnical supervision.",
+          "C. Mandatory employment of only civil servants on the foundation drilling rigs.",
+          "D. Requiring the developer to construct a public hospital near the site."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 17(1)",
+        rationale: "Section 17 allows the BA to impose conditions when granting approval or consent, such as pre-drilling boreholes, proof drilling, continuous structural/geotechnical supervision, and instrumentation monitoring."
+      },
+      {
+        id: 17,
+        category: "Emergency Closure (s.24A)",
+        scenario: "Under Section 24A of the Buildings Ordinance, when can the Building Authority apply to the District Court for a Closure Order on a building?",
+        options: [
+          "A. When demolition or structural alteration works render the building or adjacent premises liable to cause immediate danger to life or safety of occupants.",
+          "B. Whenever an owner fails to pay their quarterly rates to the Treasury.",
+          "C. Whenever a contractor is more than 30 days behind on construction schedule.",
+          "D. Exclusively when asbestos is detected inside an elevator shaft."
+        ],
+        correct: 0,
+        statutoryRef: "BO Section 24A",
+        rationale: "Under s.24A, the Court may make a Closure Order upon application by the BA where building works, demolition, or structural damage cause immediate danger to the occupants or neighbors."
+      },
+      {
+        id: 18,
+        category: "Disciplinary Powers (s.13(4))",
+        scenario: "Under Section 13(4) of the Buildings Ordinance, which of the following orders is a Disciplinary Board legally empowered to make against an Authorized Signatory found guilty of professional negligence or misconduct?",
+        options: [
+          "A. Impose an immediate custodial sentence of 3 years' imprisonment without court trial.",
+          "B. Confiscate the personal bank accounts and residential properties of the AS.",
+          "C. Order the removal of the AS's name from the register, issue a formal reprimand, or order a fine.",
+          "D. Order the immediate liquidation of the contractor's corporate holding company."
+        ],
+        correct: 2,
+        statutoryRef: "BO Section 13(4)",
+        rationale: "Under s.13(4), a Disciplinary Board can order the removal of a contractor/AS from the register, suspend them, issue a reprimand, or impose a statutory fine. Disciplinary Boards CANNOT impose prison sentences; criminal imprisonment is strictly within the jurisdiction of the criminal courts under Section 40."
+      },
+      {
+        id: 19,
+        category: "Excavation & Utilities (APP-137)",
+        scenario: "During trench excavation for underground storm drains along a busy urban street, an excavator bucket strikes and ruptures a 300 mm diameter fresh water main. Water floods the excavation and begins washing out subsoil beneath the public carriageway. What is the immediate statutory priority of the AS?",
+        options: [
+          "A. Instruct the machine operator to bury the burst pipe under soil to hide the leak from WSD inspectors.",
+          "B. Evacuate personnel, isolate electrical sources, implement immediate public road cordons, notify emergency services, WSD, and BD Emergency Team.",
+          "C. Wait until normal office hours the next morning to email the Authorized Person.",
+          "D. Direct the site plumber to patch the 300 mm pressurized main with silicone sealant."
+        ],
+        correct: 1,
+        statutoryRef: "PNAP APP-137 & BO Section 40(2B)",
+        rationale: "Rupture of a major water main causing ground washout presents imminent risk of street collapse. Immediate safety cordons, utility isolation, and emergency statutory notifications are required under s.40(2B)."
+      },
+      {
+        id: 20,
+        category: "Steel Construction Code",
+        scenario: "Under the Code of Practice for the Structural Use of Steel 2011, what is the mandatory calibration frequency for torque wrenches used in tightening Preloaded High Strength Friction Grip (HSFG) bolts on site?",
+        options: [
+          "A. Once every 5 years by an overseas laboratory.",
+          "B. At least once daily before every shift and whenever calibration drift is suspected.",
+          "C. Only after a bolt has fractured during tightening.",
+          "D. Torque wrenches require no calibration if purchased brand new."
+        ],
+        correct: 1,
+        statutoryRef: "Code of Practice for Structural Use of Steel 2011",
+        rationale: "The Steel Code requires torque wrenches for preloaded HSFG bolting to be calibrated at least once daily (or before each working shift) using a calibrated tension indicator on site."
+      },
+      {
+        id: 21,
+        category: "Precast Concrete Code",
+        scenario: "Under the Code of Practice for Precast Concrete Construction 2016, what verification must an AS ensure before hoisting precast volumetric bathroom pods or heavy façade elements onto high floors?",
+        options: [
+          "A. Verbal confirmation from the tower crane driver that the load feels light enough.",
+          "B. Verification of factory cube strength test certificates, anchor insert proof load records, and lifting gear inspection certificates.",
+          "C. Ensuring the precast unit has been painted with waterproof primer on all sides.",
+          "D. Weighing the unit on a bathroom scale."
+        ],
+        correct: 1,
+        statutoryRef: "Code of Practice for Precast Concrete Construction 2016",
+        rationale: "Precast lifting safety mandates verified mill certificates, concrete cube strength results exceeding striking/lifting limits, proof tests on lifting anchors, and valid lifting gear test certificates under FIUO."
+      },
+      {
+        id: 22,
+        category: "Dangerous Hillsides (s.27A)",
+        scenario: "An RGBC is carrying out site formation works. Heavy rain triggers a 15-meter wide slip on an adjacent cut slope within the lot boundary, exposing tension cracks directly behind a public bus stop. Under Section 27A of the Buildings Ordinance, who is legally responsible for carrying out the slope investigation and stabilization works?",
+        options: [
+          "A. The Transport Department because a bus stop is affected.",
+          "B. The owner of the land or the party responsible for slope maintenance under the land lease.",
+          "C. The individual bus driver who witnessed the landslide.",
+          "D. The subcontractor who operated the excavator on site."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 27A",
+        rationale: "Under s.27A, the Building Authority serves Dangerous Hillside Orders on the owner of the land (or the party legally obligated under the lease) to carry out the investigation and remedial stabilization."
+      },
+      {
+        id: 23,
+        category: "Specified Forms (BA12 vs BA13)",
+        scenario: "What is the primary statutory difference between Form BA12 and Form BA13 under the Buildings Ordinance specified forms framework?",
+        options: [
+          "A. Form BA12 is the Certificate of Completion of building works submitted by the AP/RSE, whereas Form BA13 is the actual application for an Occupation Permit (OP) or Temporary Occupation Permit co-signed by AP, RSE, and AS.",
+          "B. Form BA12 is for demolition and BA13 is for minor works.",
+          "C. Form BA12 is signed by the client alone, while BA13 is signed by the contractor alone.",
+          "D. Form BA12 applies only to government buildings exempt under Section 41."
+        ],
+        correct: 0,
+        statutoryRef: "PNRC 1 / PNAP APP-60 & BO Section 21",
+        rationale: "Form BA12 is the certificate of completion of building works signed by the AP and RSE, whereas Form BA13 is the formal joint application for an Occupation Permit co-signed by the AP, RSE, and AS."
+      },
+      {
+        id: 24,
+        category: "Testing Powers (s.30)",
+        scenario: "During concrete casting of structural columns, standard 28-day cube crushing tests fail to achieve the specified characteristic design strength of 45 MPa (averaging 31 MPa). Under Section 30 of the Buildings Ordinance, what statutory power does the Building Authority possess?",
+        options: [
+          "A. The BA has no authority to intervene once concrete has hardened.",
+          "B. The BA may order non-destructive testing, core cutting, or load testing of the completed columns, or carry out the tests itself and recover expenses from the owner/contractor.",
+          "C. The BA must immediately demolish the entire development without investigation.",
+          "D. The BA can only report the matter to the Consumer Council."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 30",
+        rationale: "Section 30 empowers the Building Authority to order tests on materials or completed building works (such as coring or load tests). If the contractor/owner fails to comply, the BA can execute the tests and recover all costs."
+      },
+      {
+        id: 25,
+        category: "Record Retention (B(A)R Reg. 11)",
+        scenario: "Under Regulation 11 of the Building (Administration) Regulations, what is the minimum statutory retention period for inspection records, supervisory logs, and material testing certificates after practical completion of building works?",
+        options: [
+          "A. 14 days after Form BA14 submission.",
+          "B. 3 months following the expiry of the defect liability period.",
+          "C. Not less than 12 months after the completion of the building works.",
+          "D. 50 years matching the design life of the structure."
+        ],
+        correct: 2,
+        statutoryRef: "B(A)R Regulation 11",
+        rationale: "Regulation 11 stipulates that every registered contractor must keep and retain all test records, supervisory logs, and certificates for NOT LESS THAN 12 MONTHS after project completion."
+      },
+      {
+        id: 26,
+        category: "Demolition Regulations",
+        scenario: "Under the Building (Demolition Works) Regulations, when is the use of a wrecking ball (ball and crane) demolition technique legally permitted in Hong Kong urban areas?",
+        options: [
+          "A. Permitted at any time between 07:00 and 19:00 on weekdays.",
+          "B. It is strictly prohibited in dense urban areas unless exceptional site boundary buffers exist and explicit prior approval is granted by the Building Authority.",
+          "C. Permitted whenever the AS is physically standing next to the crane.",
+          "D. Permitted for any building under 15 m in height without notice."
+        ],
+        correct: 1,
+        statutoryRef: "Building (Demolition Works) Regulations & Demolition Code",
+        rationale: "Ball and crane demolition creates severe uncontrolled impact vibration, dust, and danger of progressive collapse. It is strictly controlled and prohibited in urban areas without explicit, exceptional BA approval."
+      },
+      {
+        id: 27,
+        category: "Waivers & Modifications (s.42)",
+        scenario: "Under Section 42 of the Buildings Ordinance, which statutory authority possesses the legal power to grant a modification or exemption from the provisions of the Ordinance or its subsidiary regulations?",
+        options: [
+          "A. The Authorized Person acting in consultation with the developer.",
+          "B. The Authorized Signatory of the Registered General Building Contractor.",
+          "C. The Building Authority (Director of Buildings).",
+          "D. The Hong Kong Institution of Engineers (HKIE)."
+        ],
+        correct: 2,
+        statutoryRef: "BO Section 42",
+        rationale: "Section 42 vests the power to grant modifications or exemptions from statutory regulations strictly in the Building Authority (BA). Neither the AP nor the contractor can grant statutory waivers."
+      },
+      {
+        id: 28,
+        category: "TCP Inspection Frequency",
+        scenario: "Under the Code of Practice for Site Safety Supervision, what is the mandatory inspection frequency for a Contractor's Stream Technically Competent Person Grade T1 (TCP T1) assigned to Category III complex building works?",
+        options: [
+          "A. Continuous full-time physical presence on site during working hours.",
+          "B. One site inspection visit every two weeks.",
+          "C. A phone call to the site agent once per month.",
+          "D. Inspection only when a safety accident occurs."
+        ],
+        correct: 0,
+        statutoryRef: "SSPS Code Table 5.1 & Table 5.2",
+        rationale: "For Category III complex works (e.g. deep basement, major ELS, complex foundation/superstructure), TCP T1 in the Contractor's Stream is mandated to provide continuous, full-time on-site presence."
+      },
+      {
+        id: 29,
+        category: "Subcontractor Supervision (s.9(5)(a))",
+        scenario: "An RGBC subcontracts the installation of specialized structural steel transfer trusses to an independent steelwork contractor. None of the subcontractor's staff are registered with the BD. What is the statutory supervisory duty of the RGBC's AS under Section 9(5)(a)?",
+        options: [
+          "A. The AS has no duty because the subcontractor is a specialist firm.",
+          "B. The AS must provide continuous supervision of the subcontractor's operations to ensure full compliance with approved drawings and regulations.",
+          "C. The AS only needs to verify the subcontractor's invoices.",
+          "D. The subcontractor automatically becomes an Authorized Signatory upon signing the subcontract."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 9(5)(a)",
+        rationale: "Under s.9(5)(a), the RGBC and AS owe a statutory duty to provide continuous supervision across all works on site. Subcontracting work does not dilute this primary statutory duty."
+      },
+      {
+        id: 30,
+        category: "Section 40 Mens Rea",
+        scenario: "Under Section 40(2A) of the Buildings Ordinance, what constitutes the essential mental element (mens rea) and factual condition required to convict a contractor or AS of deviating from approved plans?",
+        options: [
+          "A. Pure accidental deviation where no safety or structural risk exists.",
+          "B. Knowingly deviating or knowingly permitting deviation from approved plans in a manner that causes or is likely to cause risk of injury to persons or damage to property.",
+          "C. Failing to pay the plan submission fee on time.",
+          "D. Completing the project ahead of the developer's target schedule."
+        ],
+        correct: 1,
+        statutoryRef: "BO Section 40(2A)",
+        rationale: "Section 40(2A) requires proof that the defendant 'knowingly' deviated or permitted deviation from approved plans, AND that the deviation caused or was likely to cause risk of injury or collapse."
+      }
+    ];
+
+    /* ====================================================================
+       2. APPLICATION STATE MANAGEMENT
+       ==================================================================== */
+    const EXAM_DURATION_SECONDS = 45 * 60; // 45 minutes
+    let state = {
+      currentSession: 'morning',
+      questions: [],
+      currentQuestionIndex: 0,
+      userAnswers: {},   // { qId: optionIndex }
+      flaggedQuestions: new Set(),
+      timerSecondsRemaining: EXAM_DURATION_SECONDS,
+      timerInterval: null,
+      isTimerPaused: false,
+      isExamSubmitted: false
+    };
+
+    /* ====================================================================
+       3. INITIALIZATION & SESSION GENERATION
+       ==================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('totalPoolCount').textContent = QUESTION_BANK.length;
+      
+      // Auto-detect current session based on real-world Hong Kong time (09:00 vs 18:00)
+      const currentHour = new Date().getHours();
+      const defaultSession = (currentHour >= 9 && currentHour < 18) ? 'morning' : 'evening';
+      setSession(defaultSession);
+
+      // Keyboard navigation support
+      window.addEventListener('keydown', handleKeyboardShortcuts);
+    });
+
+    /**
+     * Switch between Morning (09:00) and Evening (18:00) test papers.
+     * Uses deterministic pseudo-random shuffle seeded by the session tag.
+     */
+    function setSession(sessionType) {
+      state.currentSession = sessionType;
+      
+      // Toggle button UI
+      const btnM = document.getElementById('btnSetMorning');
+      const btnE = document.getElementById('btnSetEvening');
+      const badgeTitle = document.getElementById('sessionTitle');
+
+      if (sessionType === 'morning') {
+        btnM.className = "px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-semibold";
+        btnE.className = "px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 font-medium";
+        badgeTitle.textContent = "早晨卷 (Morning Session 09:00 更新)";
+      } else {
+        btnE.className = "px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-semibold";
+        btnM.className = "px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 font-medium";
+        badgeTitle.textContent = "傍晚卷 (Evening Session 18:00 更新)";
+      }
+
+      loadExamQuestionsForSession(sessionType);
+      resetTimerAndUI();
+    }
+
+    /**
+     * Load exactly 30 questions. If pool has 30, uses a distinct seed sequence.
+     */
+    function loadExamQuestionsForSession(sessionType) {
+      let pool = [...QUESTION_BANK];
+      if (sessionType === 'evening') {
+        // Reverse or shift for alternative session sequence
+        pool = pool.slice(15).concat(pool.slice(0, 15));
+      }
+      state.questions = pool.slice(0, 30);
+      state.currentQuestionIndex = 0;
+      state.userAnswers = {};
+      state.flaggedQuestions.clear();
+      state.isExamSubmitted = false;
+
+      renderPalette();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    function regenerateRandomExam() {
+      // Fisher-Yates random shuffle
+      let shuffled = [...QUESTION_BANK];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      state.questions = shuffled.slice(0, 30);
+      state.currentQuestionIndex = 0;
+      state.userAnswers = {};
+      state.flaggedQuestions.clear();
+      state.isExamSubmitted = false;
+
+      document.getElementById('sessionTitle').textContent = "即時隨機抽樣卷 (Custom Randomized)";
+      resetTimerAndUI();
+      renderPalette();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    /* ====================================================================
+       4. TIMER ENGINE (45 MINUTES COUNTDOWN)
+       ==================================================================== */
+    function startTimer() {
+      if (state.timerInterval) clearInterval(state.timerInterval);
+      state.timerInterval = setInterval(() => {
+        if (!state.isTimerPaused && !state.isExamSubmitted) {
+          state.timerSecondsRemaining--;
+          updateTimerDisplay();
+
+          if (state.timerSecondsRemaining <= 0) {
+            clearInterval(state.timerInterval);
+            timeOutAutoSubmit();
+          }
+        }
+      }, 1000);
+    }
+
+    function resetTimerAndUI() {
+      state.timerSecondsRemaining = EXAM_DURATION_SECONDS;
+      state.isTimerPaused = false;
+      document.getElementById('timerActionText').textContent = "暫停";
+      document.getElementById('timerIcon').className = "fa-solid fa-pause mr-1";
+      document.getElementById('examResultSection').classList.add('hidden');
+      updateTimerDisplay();
+      startTimer();
+    }
+
+    function toggleTimer() {
+      if (state.isExamSubmitted) return;
+      state.isTimerPaused = !state.isTimerPaused;
+      const btnText = document.getElementById('timerActionText');
+      const icon = document.getElementById('timerIcon');
+
+      if (state.isTimerPaused) {
+        btnText.textContent = "繼續";
+        icon.className = "fa-solid fa-play mr-1";
+      } else {
+        btnText.textContent = "暫停";
+        icon.className = "fa-solid fa-pause mr-1";
+      }
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(state.timerSecondsRemaining / 60);
+      const seconds = state.timerSecondsRemaining % 60;
+      const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      const displayElem = document.getElementById('timerDisplay');
+      displayElem.textContent = formatted;
+
+      // Pulse red warning when less than 5 minutes remain
+      if (state.timerSecondsRemaining <= 300) {
+        displayElem.classList.add('timer-urgent');
+      } else {
+        displayElem.classList.remove('timer-urgent');
+      }
+    }
+
+    function timeOutAutoSubmit() {
+      alert("時間到！45分鐘考試時限已屆滿，系統將自動交卷並進行法定評核評分。");
+      submitExam();
+    }
+
+    /* ====================================================================
+       5. QUESTION RENDERING & USER SELECTION
+       ==================================================================== */
+    function renderCurrentQuestion() {
+      if (state.questions.length === 0) return;
+      const q = state.questions[state.currentQuestionIndex];
+
+      document.getElementById('qIndexBadge').textContent = `Question ${state.currentQuestionIndex + 1} / 30`;
+      document.getElementById('qCategoryBadge').textContent = q.category || 'Buildings Ordinance';
+      document.getElementById('qScenarioText').textContent = q.scenario;
+
+      // Update flag button state
+      const isFlagged = state.flaggedQuestions.has(q.id);
+      const flagText = document.getElementById('flagText');
+      const flagIcon = document.getElementById('flagIcon');
+      if (isFlagged) {
+        flagText.textContent = "取消標記覆核";
+        flagIcon.className = "fa-solid fa-flag text-amber-500 mr-1.5";
+      } else {
+        flagText.textContent = "標記此題稍後覆核";
+        flagIcon.className = "fa-regular fa-flag text-amber-500 mr-1.5";
+      }
+
+      // Render 4 Options
+      const optionsContainer = document.getElementById('qOptionsContainer');
+      optionsContainer.innerHTML = '';
+      const selectedAnswer = state.userAnswers[q.id];
+
+      q.options.forEach((optText, index) => {
+        const isSelected = (selectedAnswer === index);
+        const optBtn = document.createElement('button');
+        optBtn.type = 'button';
+        optBtn.onclick = () => selectOption(q.id, index);
+        optBtn.className = `w-full text-left p-4 rounded-xl border transition-all flex items-start space-x-3 ${
+          isSelected 
+            ? 'bg-brand-50/80 dark:bg-brand-950/40 border-brand-500 text-brand-900 dark:text-brand-100 ring-2 ring-brand-500/20' 
+            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-850'
+        }`;
+
+        optBtn.innerHTML = `
+          <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold mt-0.5 ${
+            isSelected 
+              ? 'bg-brand-500 text-white' 
+              : 'border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400'
+          }">
+            ${String.fromCharCode(65 + index)}
+          </div>
+          <span class="text-sm leading-relaxed">${optText}</span>
+        `;
+        optionsContainer.appendChild(optBtn);
+      });
+
+      // Update Prev / Next buttons
+      document.getElementById('btnPrev').disabled = (state.currentQuestionIndex === 0);
+      document.getElementById('btnNext').disabled = (state.currentQuestionIndex === state.questions.length - 1);
+
+      highlightActivePalette();
+    }
+
+    function selectOption(questionId, optionIndex) {
+      if (state.isExamSubmitted) return;
+      state.userAnswers[questionId] = optionIndex;
+      renderCurrentQuestion();
+      renderPalette();
+      updateProgress();
+    }
+
+    function navigateQuestion(direction) {
+      const targetIndex = state.currentQuestionIndex + direction;
+      if (targetIndex >= 0 && targetIndex < state.questions.length) {
+        state.currentQuestionIndex = targetIndex;
+        renderCurrentQuestion();
+      }
+    }
+
+    function jumpToQuestion(index) {
+      state.currentQuestionIndex = index;
+      renderCurrentQuestion();
+    }
+
+    function toggleFlagCurrentQuestion() {
+      const q = state.questions[state.currentQuestionIndex];
+      if (state.flaggedQuestions.has(q.id)) {
+        state.flaggedQuestions.delete(q.id);
+      } else {
+        state.flaggedQuestions.add(q.id);
+      }
+      renderCurrentQuestion();
+      renderPalette();
+    }
+
+    /* ====================================================================
+       6. QUESTION NAVIGATOR PALETTE (1 to 30)
+       ==================================================================== */
+    function renderPalette() {
+      const paletteGrid = document.getElementById('paletteGrid');
+      paletteGrid.innerHTML = '';
+
+      state.questions.forEach((q, index) => {
+        const isAnswered = (state.userAnswers[q.id] !== undefined);
+        const isFlagged = state.flaggedQuestions.has(q.id);
+        const isCurrent = (state.currentQuestionIndex === index);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => jumpToQuestion(index);
+
+        let styleClass = "relative w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ";
+        
+        if (isCurrent) {
+          styleClass += "ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-900 font-extrabold ";
+        }
+
+        if (isAnswered) {
+          styleClass += "bg-brand-500 text-white shadow-sm hover:bg-brand-600";
+        } else {
+          styleClass += "border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-750";
+        }
+
+        btn.className = styleClass;
+        btn.textContent = index + 1;
+
+        // Flag icon overlay
+        if (isFlagged) {
+          const flagDot = document.createElement('span');
+          flagDot.className = "absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900";
+          btn.appendChild(flagDot);
+        }
+
+        paletteGrid.appendChild(btn);
+      });
+
+      // Update counters
+      const answeredCount = Object.keys(state.userAnswers).length;
+      const flaggedCount = state.flaggedQuestions.size;
+      const unansweredCount = state.questions.length - answeredCount;
+
+      document.getElementById('legendAnswered').textContent = answeredCount;
+      document.getElementById('legendFlagged').textContent = flaggedCount;
+      document.getElementById('legendUnanswered').textContent = unansweredCount;
+      document.getElementById('flaggedCountBadge').innerHTML = `<i class="fa-solid fa-flag mr-1"></i>${flaggedCount} 待覆核`;
+    }
+
+    function highlightActivePalette() {
+      // Re-trigger classes on active question index
+      const buttons = document.getElementById('paletteGrid').children;
+      for (let i = 0; i < buttons.length; i++) {
+        if (i === state.currentQuestionIndex) {
+          buttons[i].classList.add('ring-2', 'ring-brand-500', 'ring-offset-2');
+        } else {
+          buttons[i].classList.remove('ring-2', 'ring-brand-500', 'ring-offset-2');
+        }
+      }
+    }
+
+    function updateProgress() {
+      const answeredCount = Object.keys(state.userAnswers).length;
+      document.getElementById('progressStats').textContent = `${answeredCount} / 30`;
+      const pct = (answeredCount / 30) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    /* ====================================================================
+       7. SUBMISSION & SCORING ANALYTICS
+       ==================================================================== */
+    function confirmSubmitExam() {
+      const answeredCount = Object.keys(state.userAnswers).length;
+      const unanswered = 30 - answeredCount;
+
+      let msg = "確認提交試卷並評分？";
+      if (unanswered > 0) {
+        msg = `警告：您尚有 ${unanswered} 條題目未作答！\n\n屋宇署考試答錯不倒扣分，建議盡量完成所有題目。\n確認現在交卷？`;
+      }
+      if (confirm(msg)) {
+        submitExam();
+      }
+    }
+
+    function submitExam() {
+      state.isExamSubmitted = true;
+      if (state.timerInterval) clearInterval(state.timerInterval);
+
+      // Calculate score
+      let correctCount = 0;
+      state.questions.forEach(q => {
+        if (state.userAnswers[q.id] === q.correct) {
+          correctCount++;
+        }
+      });
+
+      const percentage = Math.round((correctCount / 30) * 100);
+      const isPassed = (correctCount >= 21); // 70% benchmark
+
+      const timeUsedSeconds = EXAM_DURATION_SECONDS - state.timerSecondsRemaining;
+      const timeM = Math.floor(timeUsedSeconds / 60);
+      const timeS = timeUsedSeconds % 60;
+      const timeUsedStr = `${String(timeM).padStart(2, '0')}:${String(timeS).padStart(2, '0')}`;
+
+      // Populate Result Dashboard
+      document.getElementById('scoreRatioDisplay').textContent = `${correctCount} / 30`;
+      document.getElementById('scorePercentageDisplay').textContent = `${percentage}%`;
+      document.getElementById('timeUsedDisplay').textContent = timeUsedStr;
+
+      const verdictBadge = document.getElementById('passVerdictBadge');
+      const icon = document.getElementById('resultStatusIcon');
+      if (isPassed) {
+        verdictBadge.textContent = "合格 (PASS)";
+        verdictBadge.className = "text-lg font-bold mt-1.5 text-emerald-600 dark:text-emerald-400";
+        icon.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-300";
+        icon.innerHTML = `<i class="fa-solid fa-trophy"></i>`;
+      } else {
+        verdictBadge.textContent = "未及格 (FAIL)";
+        verdictBadge.className = "text-lg font-bold mt-1.5 text-rose-600 dark:text-rose-400";
+        icon.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-rose-100 text-rose-600 dark:bg-rose-900/50 dark:text-rose-300";
+        icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+      }
+
+      // Render Question-by-Question Review
+      renderReviewList();
+
+      // Show Result Section and scroll into view
+      const resultSec = document.getElementById('examResultSection');
+      resultSec.classList.remove('hidden');
+      resultSec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderReviewList() {
+      const reviewContainer = document.getElementById('reviewQuestionsList');
+      reviewContainer.innerHTML = '';
+
+      state.questions.forEach((q, idx) => {
+        const userAns = state.userAnswers[q.id];
+        const isCorrect = (userAns === q.correct);
+
+        const card = document.createElement('div');
+        card.className = `p-5 rounded-xl border ${
+          isCorrect 
+            ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/60' 
+            : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800/60'
+        } space-y-3`;
+
+        const userChoiceText = (userAns !== undefined) ? q.options[userAns] : '未作答 (No Answer)';
+        const correctChoiceText = q.options[q.correct];
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider ${isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">
+              <i class="fa-solid ${isCorrect ? 'fa-circle-check text-emerald-500' : 'fa-circle-xmark text-rose-500'} mr-1.5"></i>
+              Question ${idx + 1} · ${isCorrect ? '答對 (Correct)' : '答錯 (Incorrect)'}
+            </span>
+            <span class="text-[11px] px-2 py-0.5 rounded bg-white dark:bg-slate-900 font-mono text-slate-500 border border-slate-200 dark:border-slate-800">
+              ${q.statutoryRef}
+            </span>
+          </div>
+
+          <p class="text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
+            ${q.scenario}
+          </p>
+
+          <div class="text-xs space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+            <div class="${isCorrect ? 'text-emerald-800 dark:text-emerald-300' : 'text-rose-800 dark:text-rose-300'}">
+              <strong>您的選擇：</strong> ${userChoiceText}
+            </div>
+            ${!isCorrect ? `
+              <div class="text-emerald-800 dark:text-emerald-300">
+                <strong>法定正確答案：</strong> ${correctChoiceText}
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="mt-2 p-3 bg-white dark:bg-slate-900 rounded-lg text-xs leading-relaxed text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+            <strong class="text-slate-900 dark:text-white"><i class="fa-solid fa-book-law mr-1 text-brand-500"></i>法定判例與法條剖析：</strong><br>
+            ${q.rationale}
+          </div>
+        `;
+
+        reviewContainer.appendChild(card);
+      });
+    }
+
+    function scrollToReviewSection() {
+      document.getElementById('reviewContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetAndRestartExam() {
+      state.userAnswers = {};
+      state.flaggedQuestions.clear();
+      resetTimerAndUI();
+      renderPalette();
+      renderCurrentQuestion();
+      updateProgress();
+      document.getElementById('viewSimulator').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ====================================================================
+       8. TAB & THEME NAVIGATION
+       ==================================================================== */
+    function switchMainTab(tabName) {
+      const viewSim = document.getElementById('viewSimulator');
+      const viewSyl = document.getElementById('viewSyllabus');
+      const btnSim = document.getElementById('tabBtnSimulator');
+      const btnSyl = document.getElementById('tabBtnSyllabus');
+
+      if (tabName === 'simulator') {
+        viewSim.classList.remove('hidden');
+        viewSyl.classList.add('hidden');
+        btnSim.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300";
+        btnSyl.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      } else {
+        viewSim.classList.add('hidden');
+        viewSyl.classList.remove('hidden');
+        btnSyl.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300";
+        btnSim.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Apply stored theme on initial load
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+
+    function openGithubModal() {
+      document.getElementById('githubModal').classList.remove('hidden');
+    }
+    function closeGithubModal() {
+      document.getElementById('githubModal').classList.add('hidden');
+    }
+
+    function handleKeyboardShortcuts(e) {
+      // Avoid shortcuts if modal is open
+      if (!document.getElementById('githubModal').classList.contains('hidden')) return;
+
+      if (e.key === 'ArrowLeft') {
+        navigateQuestion(-1);
+      } else if (e.key === 'ArrowRight') {
+        navigateQuestion(1);
+      } else if (['1', '2', '3', '4'].includes(e.key)) {
+        const optionIndex = parseInt(e.key) - 1;
+        const q = state.questions[state.currentQuestionIndex];
+        if (q) selectOption(q.id, optionIndex);
+      }
+    }
+  </script>
+</body>
+</html>
