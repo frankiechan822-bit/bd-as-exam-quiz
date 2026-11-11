@@ -41,8 +41,8 @@ def call_gemini_with_retry(api_key, prompt, max_retries=3):
     for attempt in range(1, max_retries + 1):
         try:
             log(f"Calling Google Gemini API (Attempt {attempt}/{max_retries})...")
-            # 設置嚴格逾時：連線 10 秒，讀取 60 秒
-            response = requests.post(url, json=payload, timeout=(10, 60))
+            # 放寬至 100 秒讀取上限
+            response = requests.post(url, json=payload, timeout=(15, 100))
             
             if response.status_code in [429, 503]:
                 wait_sec = attempt * 5
@@ -53,30 +53,32 @@ def call_gemini_with_retry(api_key, prompt, max_retries=3):
             if response.status_code == 200:
                 result = response.json()
                 raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
-                log("Received response successfully.")
+                log("Received batch successfully.")
                 return json.loads(raw_text).get("questions", [])
             else:
                 log(f"HTTP Error {response.status_code}: {response.text}")
-                time.sleep(3)
+                time.sleep(4)
 
         except requests.exceptions.Timeout:
             log(f"Timeout on attempt {attempt}, retrying...")
-            time.sleep(3)
+            time.sleep(4)
         except Exception as e:
             log(f"Error: {e}")
-            time.sleep(3)
+            time.sleep(4)
 
     raise Exception("Failed after maximum retries.")
 
 def generate_batch(api_key, past_topics, batch_num, start_id):
     if batch_num == 1:
-        syllabus = "Cap. 123 (s.9, s.14, s.17, s.21, s.23, s.40) & Forms BA8, BA10, BA12, BA13, BA14, BA14A, MWCS."
+        syllabus = "Cap. 123 (s.9 continuous supervision, s.14/s.17 consent validity & conditions, s.21 OP refusal, s.23, s.40 criminal liabilities)."
+    elif batch_num == 2:
+        syllabus = "Statutory Specified Forms (BA8, BA10 7-day notice, BA12, BA13, BA14, BA14A) & Minor Works Control System (MWCS Class I, II, III)."
     else:
-        syllabus = "B(A)R (Reg. 10, 11, 26, 27), PNRC 4, PNRC 14, PNRC 38, PNRC 52, SSPS Code (TCP streams)."
+        syllabus = "B(A)R (Reg. 10, 11, 26, 27 resumption notice), PNRC 4 (hoardings/gantries), PNRC 14 (RPZ), PNRC 38, SSPS Code (TCP streams)."
 
     prompt = f"""
 You are an examiner for the HK Buildings Department RGBC Authorized Signatory MC exam (under PNRC 38 Appendix P).
-Generate exactly 15 scenario-based Multiple Choice questions in English for questions {start_id} to {start_id + 14}.
+Generate exactly 10 high-difficulty, realistic, scenario-based Multiple Choice questions in English for questions {start_id} to {start_id + 9}.
 
 Syllabus Focus:
 {syllabus}
@@ -89,7 +91,7 @@ Format: Return strictly a JSON object with a 'questions' array. No markdown code
   "questions": [
     {{
       "id": {start_id},
-      "scenario": "A 2-sentence site dilemma in English...",
+      "scenario": "A 2-3 sentence realistic site dilemma in English...",
       "options": [
         "A. First plausible option",
         "B. Second plausible option",
@@ -97,8 +99,8 @@ Format: Return strictly a JSON object with a 'questions' array. No markdown code
         "D. Fourth plausible option"
       ],
       "correctIndex": 1,
-      "statutoryRef": "BO Section 9(5)(b)",
-      "rationale": "Legal rationale in English."
+      "statutoryRef": "Exact statutory section/regulation code",
+      "rationale": "Clear legal rationale in English explaining the statutory reason."
     }}
   ]
 }}
@@ -118,16 +120,19 @@ def main():
     log(f"Starting generation for {session_label}...")
     past_topics = load_history_summary()
 
-    log("Generating Batch 1 (Questions 1-15)...")
-    batch_1 = generate_batch(api_key, past_topics, batch_num=1, start_id=1)
-    
+    log("Generating Batch 1 (Questions 1-10)...")
+    b1 = generate_batch(api_key, past_topics, batch_num=1, start_id=1)
     time.sleep(2)
 
-    log("Generating Batch 2 (Questions 16-30)...")
-    batch_2 = generate_batch(api_key, past_topics, batch_num=2, start_id=16)
+    log("Generating Batch 2 (Questions 11-20)...")
+    b2 = generate_batch(api_key, past_topics, batch_num=2, start_id=11)
+    time.sleep(2)
+
+    log("Generating Batch 3 (Questions 21-30)...")
+    b3 = generate_batch(api_key, past_topics, batch_num=3, start_id=21)
 
     all_questions = []
-    for idx, q in enumerate(batch_1 + batch_2):
+    for idx, q in enumerate(b1 + b2 + b3):
         q["id"] = idx + 1
         all_questions.append(q)
 
@@ -142,7 +147,7 @@ def main():
         json.dump(quiz_data, f, ensure_ascii=False, indent=2)
 
     append_to_history(all_questions)
-    log("Done! 30 questions saved to current_quiz.json.")
+    log(f"Done! Successfully generated {len(all_questions)} questions into current_quiz.json.")
 
 if __name__ == "__main__":
     main()
