@@ -22,10 +22,11 @@ def append_to_history(new_questions, history_file="history_log.txt"):
             snippet = q.get("scenario", "")[:60].replace("\n", " ")
             f.write(f"[{ref}] {snippet}\n")
 
-def call_gemini_with_retry(api_key, prompt, max_retries=3):
-    # 候選穩定模型列表（按穩定度輪流調用）
-    candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
-    
+def call_gemini_with_retry(api_key, prompt, max_retries=5):
+    # Google 強制指定唯一模型
+    model_name = "gemini-3.8-flash"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -34,37 +35,34 @@ def call_gemini_with_retry(api_key, prompt, max_retries=3):
         }
     }
 
-    last_error = None
-    for model_name in candidate_models:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
-        for attempt in range(1, max_retries + 1):
-            try:
-                print(f"Requesting {model_name} (Attempt {attempt})...")
-                response = requests.post(url, json=payload, timeout=120)
-                
-                # 如果遇到 503 或 429 暫時繁忙，等待後重試
-                if response.status_code in [429, 503]:
-                    print(f"Server busy [{response.status_code}], retrying in 5 seconds...")
-                    time.sleep(5)
-                    continue
-                
-                if response.status_code == 200:
-                    result = response.json()
-                    raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
-                    return json.loads(raw_text).get("questions", [])
-                else:
-                    last_error = f"HTTP {response.status_code}: {response.text}"
-                    print(f"Model {model_name} failed: {last_error}")
-                    break # 換下一個模型嘗試
-            except requests.exceptions.Timeout:
-                print(f"Timeout on {model_name}, retrying...")
-                time.sleep(3)
-            except Exception as e:
-                last_error = str(e)
-                print(f"Error on {model_name}: {last_error}")
-                break
+    for attempt in range(1, max_retries + 1):
+        try:
+            print(f"Calling {model_name} (Attempt {attempt}/{max_retries})...")
+            response = requests.post(url, json=payload, timeout=120)
+            
+            # 若遇 503（高峰繁忙）或 429（限流），採取漸進式等待重試
+            if response.status_code in [429, 503]:
+                wait_sec = attempt * 5  # 5s, 10s, 15s, 20s
+                print(f"Google Server busy [{response.status_code}]. Waiting {wait_sec} seconds before retry...")
+                time.sleep(wait_sec)
+                continue
 
-    raise Exception(f"All model candidates failed. Last error: {last_error}")
+            if response.status_code == 200:
+                result = response.json()
+                raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
+                return json.loads(raw_text).get("questions", [])
+            else:
+                print(f"HTTP Error {response.status_code}: {response.text}")
+                time.sleep(5)
+
+        except requests.exceptions.Timeout:
+            print(f"Request timeout on attempt {attempt}, retrying...")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            time.sleep(5)
+
+    raise Exception(f"Failed to generate questions after {max_retries} attempts.")
 
 def generate_batch(api_key, past_topics, batch_num, start_id):
     if batch_num == 1:
@@ -145,7 +143,7 @@ def main():
     print(f"Starting Generation for {session_label}...")
     batch_1 = generate_batch(api_key, past_topics, batch_num=1, start_id=1)
     
-    time.sleep(3)  # 緩衝保護
+    time.sleep(3)
 
     batch_2 = generate_batch(api_key, past_topics, batch_num=2, start_id=16)
 
