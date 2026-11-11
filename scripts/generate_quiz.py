@@ -19,12 +19,54 @@ def append_to_history(new_questions, history_file="history_log.txt"):
     with open(history_file, "a", encoding="utf-8") as f:
         for q in new_questions:
             ref = q.get("statutoryRef", "General")
-            scenario_snippet = q.get("scenario", "")[:60].replace("\n", " ")
-            f.write(f"[{ref}] {scenario_snippet}\n")
+            snippet = q.get("scenario", "")[:60].replace("\n", " ")
+            f.write(f"[{ref}] {snippet}\n")
 
-def call_gemini_batch(api_key, past_topics, batch_num, start_id):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
+def call_gemini_with_retry(api_key, prompt, max_retries=3):
+    # 候選穩定模型列表（按穩定度輪流調用）
+    candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
     
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.35,
+            "responseMimeType": "application/json"
+        }
+    }
+
+    last_error = None
+    for model_name in candidate_models:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        for attempt in range(1, max_retries + 1):
+            try:
+                print(f"Requesting {model_name} (Attempt {attempt})...")
+                response = requests.post(url, json=payload, timeout=120)
+                
+                # 如果遇到 503 或 429 暫時繁忙，等待後重試
+                if response.status_code in [429, 503]:
+                    print(f"Server busy [{response.status_code}], retrying in 5 seconds...")
+                    time.sleep(5)
+                    continue
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    return json.loads(raw_text).get("questions", [])
+                else:
+                    last_error = f"HTTP {response.status_code}: {response.text}"
+                    print(f"Model {model_name} failed: {last_error}")
+                    break # 換下一個模型嘗試
+            except requests.exceptions.Timeout:
+                print(f"Timeout on {model_name}, retrying...")
+                time.sleep(3)
+            except Exception as e:
+                last_error = str(e)
+                print(f"Error on {model_name}: {last_error}")
+                break
+
+    raise Exception(f"All model candidates failed. Last error: {last_error}")
+
+def generate_batch(api_key, past_topics, batch_num, start_id):
     if batch_num == 1:
         syllabus = """
 1. Buildings Ordinance (Cap. 123) Core Duties & Criminal Liabilities (8 Questions):
@@ -62,7 +104,7 @@ Syllabus Focus for this batch (Questions {start_id} to {start_id + 14}):
 Do NOT repeat these recently tested scenarios:
 {past_topics}
 
-Return STRICT JSON ONLY (no markdown backticks, no ```json):
+Return STRICT JSON ONLY (no markdown formatting, no ```json):
 {{
   "questions": [
     {{
@@ -81,23 +123,7 @@ Return STRICT JSON ONLY (no markdown backticks, no ```json):
   ]
 }}
 """
-
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.35,
-            "responseMimeType": "application/json"
-        }
-    }
-
-    # 放寬 timeout 至 180 秒
-    response = requests.post(url, json=payload, timeout=180)
-    if response.status_code != 200:
-        raise Exception(f"Gemini API request failed [{response.status_code}]: {response.text}")
-    
-    result = response.json()
-    raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
-    return json.loads(raw_text).get("questions", [])
+    return call_gemini_with_retry(api_key, prompt)
 
 def main():
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -116,15 +142,13 @@ def main():
 
     past_topics = load_history_summary()
 
-    print(f"Generating Batch 1 (Questions 1-15)...")
-    batch_1 = call_gemini_batch(api_key, past_topics, batch_num=1, start_id=1)
+    print(f"Starting Generation for {session_label}...")
+    batch_1 = generate_batch(api_key, past_topics, batch_num=1, start_id=1)
     
-    time.sleep(2)  # 緩衝 2 秒避免觸發短時間請求限制
+    time.sleep(3)  # 緩衝保護
 
-    print(f"Generating Batch 2 (Questions 16-30)...")
-    batch_2 = call_gemini_batch(api_key, past_topics, batch_num=2, start_id=16)
+    batch_2 = generate_batch(api_key, past_topics, batch_num=2, start_id=16)
 
-    # 重新校正 ID (1 到 30)
     all_questions = []
     for idx, q in enumerate(batch_1 + batch_2):
         q["id"] = idx + 1
@@ -141,7 +165,7 @@ def main():
         json.dump(quiz_data, f, ensure_ascii=False, indent=2)
 
     append_to_history(all_questions)
-    print(f"Success! Generated {len(all_questions)} English questions into current_quiz.json.")
+    print(f"Completed! 30 English questions successfully written into current_quiz.json.")
 
 if __name__ == "__main__":
     main()
