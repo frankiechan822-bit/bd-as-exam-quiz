@@ -1,7 +1,398 @@
 {
-  "updated_at": "Init",
-  "session_type": "MORNING",
-  "session_title": "系統初始化試卷",
-  "total_questions": 0,
-  "questions": []
+  "session_title": "Morning Paper (2026-11-11 08:00 HKT)",
+  "updated_at": "2026-11-11 11:33:18",
+  "total_questions": 30,
+  "questions": [
+    {
+      "id": 1,
+      "scenario": "During the critical casting of a transfer plate on a 30-storey development, the Registered General Building Contractor's (RGBC) sole Authorized Signatory (AS) must depart Hong Kong for three weeks due to a sudden family emergency. The RGBC directs the Project Director (a non-AS corporate staff member) to take over supervisory duties on site and proceed with the concreting works.",
+      "options": [
+        "A. The arrangement is permissible provided a Registered Professional Engineer countersigns the inspection log.",
+        "B. The arrangement is lawful if the Authorized Person (AP) is notified in writing within 48 hours.",
+        "C. The works must cease immediately unless another registered AS of the RGBC is formally designated and present, as continuous supervision cannot be delegated to an unregistered individual.",
+        "D. Concreting may continue provided the AS leaves written delegation and reviews quality control tests upon return."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Cap. 123 s.9(5) & s.9(6); PNRC 38",
+      "rationale": "Under section 9(5) and 9(6) of the Buildings Ordinance (Cap. 123), an RGBC is required to provide continuous supervision to building works through an accepted Authorized Signatory. A non-AS project director cannot satisfy statutory continuous supervision. Without an approved AS acting for the contractor, the works cannot lawfully proceed."
+    },
+    {
+      "id": 2,
+      "scenario": "A formal consent to commence foundation works was granted by the Building Authority under section 14 on 15 January 2023. Owing to protracted commercial negotiations with the piling subcontractor, site mobilization and the first driven H-pile commencement occur on 20 May 2023 without any application for consent extension.",
+      "options": [
+        "A. The works are lawful because a consent remains valid for 12 months from the date of grant.",
+        "B. The consent has lapsed pursuant to section 17(1) because works were not commenced within 3 months, rendering the ongoing piling unauthorized building works.",
+        "C. The consent remains valid provided the Authorized Person submits Form BA10 retrospectively before testing begins.",
+        "D. The contractor is only liable for an administrative penalty under PNAP APP-24 but the consent does not lapse."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Cap. 123 s.17(1)(a)",
+      "rationale": "Under section 17(1)(a) of the Buildings Ordinance, any consent given by the Building Authority under section 14 is deemed to have lapsed if the building works to which it refers are not commenced within 3 months from the date of issue. Carrying out works under a lapsed consent constitutes carrying out works without consent under section 14(1)."
+    },
+    {
+      "id": 3,
+      "scenario": "Upon completion of a new commercial building, the AP and RGBC apply for an Occupation Permit under section 21 by submitting Form BA13. At the time of application, fire service installations have been practically completed and tested on site, but the Fire Services Department (FSD) Certificate (Form FSD 501 / FSD 172) has not yet been obtained.",
+      "options": [
+        "A. The Building Authority may grant a temporary occupation permit under section 21(2) on the condition that the certificate is produced within 30 days.",
+        "B. The Building Authority shall refuse to issue an occupation permit under section 21(6)(d) because the prescribed fire safety certificate has not been produced.",
+        "C. The Building Authority must issue the permit if the RGBC's AS and the AP execute a joint indemnity bond.",
+        "D. The application is valid if structural completion is endorsed by the Registered Structural Engineer (RSE)."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Cap. 123 s.21(6)(d)",
+      "rationale": "Section 21(6)(d) of Cap. 123 explicitly provides that the Building Authority shall refuse to issue an occupation permit or a temporary occupation permit in respect of any building where a certificate from the Director of Fire Services has not been produced stating that the building has been provided with required fire service installations and equipment."
+    },
+    {
+      "id": 4,
+      "scenario": "While driving socketed H-piles into rock, the RGBC encounters hard strata significantly higher than the presumed bed levels in the approved plans. To meet project milestones, the AS instructs the piling foreman to shorten the required bedrock socket length from 5m to 2m across 12 piles without consulting the RSE or submitting amendment plans, and certifies the works as compliant.",
+      "options": [
+        "A. The AS is liable only to professional disciplinary action under section 13 of the Buildings Ordinance.",
+        "B. The AS commits a strict liability summary offence carrying a maximum fine of HK$100,000 without risk of imprisonment.",
+        "C. The AS commits an offence under section 40(2A)(b) for knowingly misrepresenting or diverging in a material manner from approved plans, punishable by a fine of HK$1,000,000 and 3 years' imprisonment.",
+        "D. The AS is exempt from personal liability if the corporate contractor indemnifies the RSE in writing."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Cap. 123 s.40(2A)(b) & s.40(2B)",
+      "rationale": "Under section 40(2A)(b) of Cap. 123, any registered contractor or AS who knowingly misrepresents a material fact or diverges in a material manner from any approved plan or prescribed requirement commits an offence. Furthermore, under section 40(2B), if such works are likely to cause risk of injury or danger, the maximum penalty is a fine of HK$1,000,000 and imprisonment for 3 years."
+    },
+    {
+      "id": 5,
+      "scenario": "Following an unresolved commercial dispute during bulk excavation and lateral support (ELS) works, the developer determines the contract and formally dismisses the RGBC with immediate effect. The site is in an unstable geotechnical condition adjacent to a public carriageway.",
+      "options": [
+        "A. Both the developer and the dismissed RGBC must notify the Building Authority of the determination of appointment within 7 days under section 23(1), and all building works must immediately cease.",
+        "B. The RGBC must remain on site and maintain excavation works for at least 28 days regardless of contractual termination.",
+        "C. The AP can assume direct statutory duties as the RGBC AS to continue dewatering and excavation under emergency powers.",
+        "D. The developer may appoint an unregistered general engineering subcontractor to keep strutting the pit until a new RGBC is vetted."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "Cap. 123 s.23(1) & s.23(2)",
+      "rationale": "Under section 23(1) of Cap. 123, if a registered contractor ceases to be appointed, both the contractor and the employer must notify the Building Authority within 7 days. Under section 23(2), works must immediately cease until another registered contractor is appointed, except for urgent safety measures specifically permitted by the BA."
+    },
+    {
+      "id": 6,
+      "scenario": "On a complex Class I demolition site, the RGBC appoints an experienced T3 Technically Competent Person (TCP) to oversee the daily pre-weakening and cantilevered slab breaking. The AS visits the site only once a month, relying completely on the TCP's inspection logs.",
+      "options": [
+        "A. The AS has discharged statutory duties because the Site Safety Supervision Plan allows full delegation of daily operations to a qualified T3 TCP.",
+        "B. The AS cannot contract out or delegate statutory continuous supervision duties under section 9(5)(a); reliance entirely on TCPs without active AS oversight breaches statutory duties.",
+        "C. The AS is immune from prosecution as long as the TCP's inspections are countersigned by the AP's T5 representative.",
+        "D. Monthly visits by the AS satisfy the legal definition of 'continuous supervision' under PNRC 38."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Cap. 123 s.9(5)(a); Code of Practice for Site Safety Supervision",
+      "rationale": "Under section 9(5)(a) of Cap. 123, the RGBC and its AS are statutory duty holders who must give continuous supervision to building works. The establishment of a safety management system and appointment of TCPs under the Code of Practice for Site Safety Supervision complements, but does not substitute or diminish, the AS's non-delegable duty to provide continuous personal oversight."
+    },
+    {
+      "id": 7,
+      "scenario": "During ground dewatering for a two-level basement, adjacent road settlement reaches the predetermined suspension limit. The Building Authority issues a notice revoking the consent to proceed under section 17(1) until groundwater recharge schemes are implemented. The RGBC AS ignores the letter and instructs cast-in-place blinding concrete to seal the pit bottom.",
+      "options": [
+        "A. The AS is acting legally because emergency stabilizing works never require statutory consent.",
+        "B. The Building Authority has no legal power to revoke consent once issued; it can only apply for a court injunction under section 24.",
+        "C. The RGBC and AS commit an offence under section 40(1AA) by continuing building works after consent has been withdrawn/revoked under section 17.",
+        "D. The RGBC is permitted to proceed provided the AP issues an emergency stabilization certificate within 24 hours."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Cap. 123 s.17(1)(b) & s.40(1AA)",
+      "rationale": "Section 17(1)(b) empowers the Building Authority to revoke consent or impose new conditions where works cause or are likely to cause danger. Continuing works when consent has been revoked or suspended is equivalent to carrying out works without consent under section 14(1), an offence under section 40(1AA) punishable by heavy fines and imprisonment."
+    },
+    {
+      "id": 8,
+      "scenario": "An RGBC decides to alter the beam-column reinforcement layout of a multi-storey structure from that shown on the approved structural plans, intending to capture the modification in the 'as-built' amendment drawings to be submitted immediately prior to Form BA13 application.",
+      "options": [
+        "A. This is a permitted practice known as the 'as-built regularization route' under PNAP APP-55 for non-transfer structural elements.",
+        "B. The contractor may proceed without prior approval if the modification results in a higher steel reinforcement ratio.",
+        "C. The execution of structural elements deviating from approved plans without prior approved amendment and consent contravenes section 14(1), exposing the RGBC and AS to section 40(2A) criminal liability.",
+        "D. Only the Registered Structural Engineer (RSE) bears statutory liability for non-conforming structural works carried out on site."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Cap. 123 s.14(1) & s.40(2A)",
+      "rationale": "Under section 14(1) of Cap. 123, no person shall commence or carry out building works without prior approval of plans and subsequent consent. Carrying out works materially deviating from approved plans without prior approval/consent violates section 14(1) and constitutes a criminal offence under section 40(2A)."
+    },
+    {
+      "id": 9,
+      "scenario": "The podium commercial retail area (Floors G–3) of a mixed-use development is fully completed, fitted out, and certified safe, while the tower office floors above (Floors 4–35) are still undergoing structural curtain wall installation and concrete core construction. The developer demands opening the podium shops to the public next week.",
+      "options": [
+        "A. The developer can open the podium immediately without notice to the BA if the AP issues a Certificate of Practical Completion.",
+        "B. The podium can be occupied only if the Building Authority issues a Temporary Occupation Permit (TOP) under section 21(2)/21(5), following proper physical and fire safety segregation between podium and tower.",
+        "C. The Building Authority cannot grant an occupation permit for any part of a building until the entire structure up to roof level has received Form BA14 completion.",
+        "D. The RGBC AS can self-certify partial compliance using Form BA12 to permit retail occupancy."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Cap. 123 s.21(2) & s.21(5)",
+      "rationale": "Under section 21(2) and 21(5) of Cap. 123, the Building Authority may issue a temporary occupation permit in respect of any part of a building prior to the completion of the whole building, provided adequate safety and fire segregation ensure occupants are not endangered by ongoing building works above."
+    },
+    {
+      "id": 10,
+      "scenario": "Due to deficient steel shoring design and unauthorized premature removal of lateral bracings ordered by the RGBC AS, a deep trench collapses. While no workers or members of the public are injured, a water main is fractured and adjacent foundations of an occupied residential block suffer severe structural cracking.",
+      "options": [
+        "A. As no human injuries or fatalities occurred, the RGBC is subject only to civil damages and Buildings Department administrative warnings.",
+        "B. The RGBC and AS commit a serious criminal offence under section 40(2B)(b) for carrying out works in a manner likely to cause injury or damage to property, carrying a fine of up to HK$1,000,000 and 3 years' imprisonment.",
+        "C. Liability falls entirely on the Licensed Plumber and the Water Authority under the Waterworks Ordinance.",
+        "D. Criminal liability under Cap. 123 applies only if the trench works were deeper than 4.5 meters without shoring."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Cap. 123 s.40(2B)(b)",
+      "rationale": "Under section 40(2B)(b) of the Buildings Ordinance, any person (including an RGBC and its AS) directly concerned with the carrying out of building works who carries out such works in a manner that causes or is likely to cause risk of injury to any person or damage to any property commits an offence punishable by a maximum fine of HK$1,000,000 and imprisonment for 3 years."
+    },
+    {
+      "id": 11,
+      "scenario": "An RGBC is appointed for a multi-storey commercial development with approved general building and foundation plans. Having received the formal consent to commence foundation works under Section 14(1) of the Buildings Ordinance on 1 August, the developer instructs the RGBC to start driving piles immediately. The Authorized Signatory (AS) prepares Form BA10 (Notice of Intention to Commence Building Works). Under the Building (Administration) Regulations, what is the mandatory notice period before works can lawfully start on site?",
+      "options": [
+        "A. The RGBC can commence immediately upon hand-delivery of Form BA10 to the Buildings Department counter.",
+        "B. Form BA10 must be submitted not less than 7 days before the commencement date specified in the notice.",
+        "C. Form BA10 must be submitted not less than 14 days prior to commencement to allow mandatory site inspection by the BD.",
+        "D. Form BA10 must be submitted at least 48 hours prior to commencement, provided the Authorized Person countersigns."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Administration) Regulation 20(1)",
+      "rationale": "Under Regulation 20(1) of the Building (Administration) Regulations, a registered contractor shall give to the Building Authority not less than 7 days' notice in the specified form (Form BA10) of the date on which building works or street works are to be commenced."
+    },
+    {
+      "id": 12,
+      "scenario": "During the superstructure works of a residential project, the developer terminates the employment of the incumbent RGBC due to insolvency and formally appoints a replacement RGBC. The replacement RGBC prepares to take over the active site. Which statutory procedure regarding Form BA8 (Notice of Appointment of Registered Contractor) must be satisfied before the new RGBC can resume physical works?",
+      "options": [
+        "A. The developer and the new RGBC must submit Form BA8 within 7 days of the appointment, and existing consent automatically carries over without any further notice.",
+        "B. The new RGBC can resume work immediately and submit Form BA8 concurrently with the final completion certificate (Form BA14).",
+        "C. The developer must notify the Building Authority on Form BA8 within 7 days of appointment, and works cannot resume until a fresh consent or acknowledgement is issued and a new Form BA10 is submitted not less than 7 days prior to restarting works.",
+        "D. Form BA8 is only required if the Authorized Person also resigns; otherwise, an internal site memo countersigned by the RSE suffices."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Building (Administration) Regulations 8 & 20; Buildings Ordinance Section 14",
+      "rationale": "Under B(A)R 8, the developer must give notice of appointment on Form BA8 within 7 days. Because the previous contractor's consent lapses upon cessation of appointment, building works cannot lawfully proceed without a valid consent naming the new contractor and a fresh Form BA10 giving at least 7 days' notice before re-commencement."
+    },
+    {
+      "id": 13,
+      "scenario": "Upon completion of the structural frame, building envelope, and fire safety installations of a new office building, the project team prepares to apply for an Occupation Permit (OP). The Authorized Person (AP) requests the RGBC to execute Form BA14. The RGBC AS notices that several non-structural partition walls deviate from the approved layout. What is the statutory implication if the RGBC AS signs Form BA14 in this state?",
+      "options": [
+        "A. Form BA14 only certifies structural elements; minor layout variations do not affect the validity of the RGBC's certification.",
+        "B. Under B(A)R 25 and BO Section 40(2A), the AS commits a criminal offence by certifying that works were carried out in accordance with the Buildings Ordinance and approved plans when known deviations exist.",
+        "C. The RGBC AS can sign Form BA14 safely as long as an indemnity letter is provided by the AP promising to submit as-built drawings later.",
+        "D. The AS is immune from prosecution because the AP bears sole legal responsibility for all matters certified under Form BA14."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Administration) Regulation 25(1); Buildings Ordinance Section 40(2A)",
+      "rationale": "Form BA14 requires the RGBC (alongside the AP and RSE) to certify completion of works in accordance with the provisions of the Buildings Ordinance and the approved plans. Signing Form BA14 with knowledge of unauthorized material deviations constitutes knowingly misrepresenting a material fact under Section 40(2A) of the BO, carrying severe criminal penalties."
+    },
+    {
+      "id": 14,
+      "scenario": "A development includes extensive site formation works and basement construction adjacent to a scheduled area. Before obtaining consent for the superstructure, the Authorized Person requires the geotechnical and foundation phases to be formally certified as complete. Which statutory form is designated specifically for certifying completion of these distinct preliminary works to enable subsequent superstructure processing?",
+      "options": [
+        "A. Form BA12 (Application for Temporary Occupation Permit)",
+        "B. Form BA13 (Application for Occupation Permit)",
+        "C. Form BA14 (Certificate of Completion of Building Works)",
+        "D. Form BA14A (Certificate of Completion of Site Formation / Foundation Works)",
+        "E. Form MW02 (Certificate of Completion for Minor Works)"
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "Building (Administration) Regulation 25; PNAP APP-21",
+      "rationale": "Form BA14 is the statutory Certificate of Completion of Building Works (and can be applied to individual stages of building works such as foundation or site formation to obtain subsequent consents). Form BA14A is specifically the Certificate of Completion of Works for Street Works or Access Roads, not geotechnical/foundation stages."
+    },
+    {
+      "id": 15,
+      "scenario": "A building owner engages an RGBC to carry out Class I Minor Works item 1.1 (removal of an internal load-bearing wall). The RGBC AS possesses a Master's degree in Civil Engineering and suggests to the client that the RGBC can carry out the design, supervision, and execution in-house without hiring an external Authorized Person (AP) or Registered Structural Engineer (RSE). How should this proposal be assessed under the Minor Works Control System (MWCS)?",
+      "options": [
+        "A. It is legally permissible because an RGBC holds higher qualification than a Registered Minor Works Contractor (RMWC).",
+        "B. It is unlawful; Class I minor works strictly require the appointment of a Prescribed Building Professional (AP and/or RSE) for design and supervision, alongside submission of Form MW01 not less than 7 days prior to commencement.",
+        "C. It is permissible provided the RGBC registers a separate Class I minor works company under the same corporate group.",
+        "D. It is unlawful solely because Class I works can only be submitted via full formal plan approval under Section 14 of the BO."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Minor Works) Regulation Sections 27 & 28",
+      "rationale": "Under the MWCS, Class I minor works are relatively complex and statutorily require the appointment of a Prescribed Building Professional (AP and, where necessary, RSE/RGE) to design and supervise the works, as well as a Prescribed Registered Contractor (such as an RGBC). The RGBC cannot substitute for the statutory role of the PBP regardless of the AS's personal engineering credentials."
+    },
+    {
+      "id": 16,
+      "scenario": "An RGBC is commissioned to carry out Class II Minor Works (erection of a metal supporting frame for an air-conditioning unit projecting more than 0.9m but not more than 1.5m from an external wall). No Prescribed Building Professional is appointed, as permitted by law. What are the statutory timeline and documentation requirements for the initial submission under the simplified reporting procedure?",
+      "options": [
+        "A. Form MW03 must be submitted to the Building Authority not less than 7 days before commencement, accompanied by prescribed plans, site photos, and structural details.",
+        "B. Form MW03 is only submitted within 14 days after completion; no prior notice is required for Class II.",
+        "C. Form MW01 must be submitted 14 days before commencement together with standard calculations.",
+        "D. Form MW05 must be submitted at least 48 hours before installation begins."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "Building (Minor Works) Regulation Section 30",
+      "rationale": "For Class II minor works where no PBP is appointed, Section 30 of the B(M)R requires the Prescribed Registered Contractor (here, the RGBC) to submit a notice of commencement on Form MW03 not less than 7 days before commencement of the works, accompanied by the prescribed plans and photographic records of the site prior to work."
+    },
+    {
+      "id": 17,
+      "scenario": "An RGBC completes Class III minor works (erection of a small projecting drying rack complying with Schedule 1 dimensional limits) in a private residential flat on 10 March. The client demands to know when and how the Buildings Department will be notified. Under the Building (Minor Works) Regulation, what is the mandatory compliance path?",
+      "options": [
+        "A. A commencement notice should have been lodged on Form MW03 at least 7 days before starting.",
+        "B. No commencement notice was required; the RGBC must submit Form MW05 together with photos and plans within 14 days after completion (on or before 24 March).",
+        "C. Form MW04 must be submitted within 28 days of completion, countersigned by an AP.",
+        "D. Class III works are completely exempt from post-completion reporting under Section 41(3) of the Buildings Ordinance."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Minor Works) Regulation Section 35",
+      "rationale": "Class III minor works follow the simplest notification path: no prior notice of commencement is required. Under B(M)R Section 35, the contractor must submit a certificate of completion on Form MW05, together with photos showing the site before and after completion and an execution plan, within 14 days after the completion of the works."
+    },
+    {
+      "id": 18,
+      "scenario": "A retail tenant requests an RGBC to form an opening in a reinforced concrete slab between the ground floor and first floor to install an internal staircase. The opening size is 4.0m by 2.5m, requiring cutting across primary beams. The client requests that the works be executed under Class I Minor Works using Form MW01 to save time. How must the RGBC Authorized Signatory advise the client?",
+      "options": [
+        "A. The works can proceed under Class I item 1.2 provided an RSE prepares and signs the MW01 forms.",
+        "B. The works exceed the statutory limits of minor works (which restrict floor slab openings and prohibit cutting main structural beams); proceeding under MWCS constitutes carrying out unauthorized building works under Section 14(1) of the BO.",
+        "C. The works can proceed under MWCS provided the RGBC applies for a waiver under Section 42 of the BO on Form BA16.",
+        "D. The works are categorized as Designated Exempted Works because they are situated entirely within private commercial premises."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Minor Works) Regulation Schedule 1; Buildings Ordinance Section 14(1)",
+      "rationale": "MWCS Schedule 1 strictly defines the limits for slab openings (e.g., maximum dimensions, restriction to non-prestressed slabs, and prohibiting the cutting of primary structural beams/columns). Cutting primary beams falls outside the scope of minor works. It must be processed through full formal plan submission, approval, and consent under Section 14 of the BO."
+    },
+    {
+      "id": 19,
+      "scenario": "An RGBC has completed Class II minor works for which no Prescribed Building Professional was appointed. The works finished on 15 September. The AS prepares Form MW04 (Certificate of Completion for Class II Works). Which of the following accurately describes the statutory requirements for the submission of Form MW04 under the Building (Minor Works) Regulation?",
+      "options": [
+        "A. Form MW04 must be submitted to the Building Authority within 14 days after completion, accompanied by photographic records showing the site after completion and as-built drawings.",
+        "B. Form MW04 must be submitted within 7 days after completion, along with concrete cube test reports.",
+        "C. Form MW04 must be countersigned by an independent RMWC (Class II) before submission.",
+        "D. Form MW04 is submitted directly to the Fire Services Department, with a copy to the BD within 30 days."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "Building (Minor Works) Regulation Section 32",
+      "rationale": "Under B(M)R Section 32, within 14 days after the completion of Class II minor works (where no PBP was appointed), the Prescribed Registered Contractor must certify completion on Form MW04 and submit it to the Building Authority together with photos taken after completion and any record plans showing variations."
+    },
+    {
+      "id": 20,
+      "scenario": "An RGBC registered under the Buildings Ordinance is appointed to construct a temporary drainage system and earth-retaining structure under Class I minor works. During a routine audit by the Buildings Department, it is discovered that the RGBC's AS signed the completion form (Form MW02) knowing that non-compliant temporary shoring materials were deployed that deviated materially from the RSE's submitted design. What statutory sanction applies directly to the AS and RGBC under Section 40 of the Buildings Ordinance?",
+      "options": [
+        "A. The RGBC is only subject to a fixed penalty administrative notice of HK$5,000.",
+        "B. Under Section 40(2A) and Section 40(2AE) of the BO, any person who knowingly misrepresents a material fact in any plan, certificate, or form submitted under the MWCS commits an offence liable to a fine of up to HK$1,000,000 and imprisonment for 3 years, in addition to disciplinary action under Section 13.",
+        "C. The AS is personally exempt from criminal liability because MWCS offences attach solely to the corporate entity.",
+        "D. The Building Authority may only deduct performance points under the Contractor Management Handbook without statutory prosecution."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Buildings Ordinance Sections 40(2A), 40(2AE), & 13",
+      "rationale": "Under Section 40(2A) and 40(2AE) of the Buildings Ordinance, any person who knowingly makes any false or misleading statement or misrepresents any material fact in any certificate, notice, or document (including MWCS forms like MW02) commits an offence punishable by a maximum fine of HK$1,000,000 and 3 years' imprisonment. Furthermore, the contractor and the AS are subject to disciplinary boards under Section 13."
+    },
+    {
+      "id": 21,
+      "scenario": "A superstructure project was suspended for four months due to a contractual dispute between the employer and the main contractor. Following dispute resolution, the Registered General Building Contractor (RGBC) wishes to resume building works immediately upon signing the settlement agreement.",
+      "options": [
+        "A. Works may resume immediately, provided that the Authorized Person (AP) is verbally notified within 24 hours.",
+        "B. The RGBC must give not less than 7 days' prior notice of resumption in the specified form (Form BA 13) to the Building Authority.",
+        "C. The RGBC must give not less than 14 days' prior notice in writing accompanied by a brand new submission of the Supervision Plan to the Building Authority.",
+        "D. Works can only resume after obtaining a fresh consent to commence works (Form BD 106) under Section 14 of the Buildings Ordinance."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Administration) Regulations Reg. 27",
+      "rationale": "Under Regulation 27 of the Building (Administration) Regulations, where building works are suspended for more than 2 months, the person for whom the works are being carried out or the registered contractor must give not less than 7 days' prior notice of resumption in the specified form (Form BA 13) to the Building Authority before resuming such works."
+    },
+    {
+      "id": 22,
+      "scenario": "The sole Authorized Signatory (AS) of an RGBC suddenly resigns while deep basement excavation and lateral support (ELS) works are underway. The contractor's management intends to allow the site agent and project manager to continue the works while seeking a replacement AS.",
+      "options": [
+        "A. The RGBC must notify the Building Authority within 7 days of the AS ceasing to act, and since no approved AS is available to supervise, the works must be suspended immediately.",
+        "B. The RGBC can appoint a registered Professional Engineer (Civil/Structural) to assume interim statutory responsibilities for up to 90 days without notifying the Building Authority.",
+        "C. The works can continue uninterrupted for up to 28 days provided the Authorized Person agrees to act as the temporary contractor AS.",
+        "D. The contractor is only required to notify the Building Authority upon final appointment and acceptance of the new AS during the next annual registration renewal."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "B(A)R Reg. 11 & PNRC 38",
+      "rationale": "Pursuant to Regulation 11 of the Building (Administration) Regulations and PNRC 38, if an Authorized Signatory ceases to act for an RGBC, the contractor must forthwith notify the Building Authority (within 7 days). If the contractor no longer possesses an approved AS to satisfy the registration requirement and supervise ongoing works, the statutory duties cannot be discharged, and works must be ceased until an acceptable substitute AS is approved or appointed."
+    },
+    {
+      "id": 23,
+      "scenario": "An RGBC is designing a vehicular access gantry and covered walkway over a busy public sidewalk alongside a high-density urban site under PNRC 4. The public footpath has heavy pedestrian traffic and abuts an active bus terminus.",
+      "options": [
+        "A. The covered walkway must have a clear headroom of not less than 2.0 m and an internal clear width of not less than 0.8 m.",
+        "B. The covered walkway must provide a minimum clear headroom of 2.4 m, a minimum clear width of 1.5 m (for heavy traffic), and continuous artificial lighting of not less than 50 lux.",
+        "C. The gantry must be designed with a minimum statutory live load allowance of 2.0 kPa with no storage allowed, and lighting is discretionary if street lamps exist.",
+        "D. Hoarding and covered walkway design requires formal approval and consent under Section 14 of the BO only if it encroaches onto private leasehold land."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "PNRC 4 & B(P)R Reg. 49",
+      "rationale": "Under PNRC 4, a covered walkway must maintain an absolute minimum clear headroom of 2.4 m throughout. The clear walking width should be at least 1.1 m for normal traffic and not less than 1.5 m for heavy pedestrian traffic. Continuous artificial lighting providing an average illuminance of not less than 50 lux at walking surface level must also be maintained."
+    },
+    {
+      "id": 24,
+      "scenario": "A contractor is planning sheet piling works for an excavation located 18 meters from an active MTR underground railway tunnel, falling within the Railway Protection Zone (RPZ) designated under PNRC 14.",
+      "options": [
+        "A. The contractor may proceed with vibratory sheet piling provided works are executed exclusively between 07:00 and 19:00 with no prior consultation with MTRCL.",
+        "B. No geotechnical assessment or railway monitoring is required because the works are beyond the 10 m absolute prohibition zone.",
+        "C. The contractor must adhere to the agreed monitoring scheme, where typical railway structure movement trigger limits (Action level) are set at 20 mm, and vibration on railway structures must not exceed 15 mm/s (peak particle velocity).",
+        "D. The contractor must seek written agreement directly from the Transport and Logistics Bureau, bypassing the Building Authority and MTRCL."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "PNRC 14 (APP-24 / PNRC 14)",
+      "rationale": "Under PNRC 14, for building and civil works within the Railway Protection Zone (typically 30 m from outer edges of underground structures or within the 60 m designated boundary), statutory protection criteria mandate that structural movement must generally not exceed 20 mm total deformation and peak particle velocity (PPV) must not exceed 15 mm/s (or stricter limits such as 5 mm/s near sensitive signaling/electrical installations)."
+    },
+    {
+      "id": 25,
+      "scenario": "An individual holding a recognized bachelor's degree in Civil Engineering with 2 years of local Hong Kong post-qualification site experience in general building works applies to be an Authorized Signatory (AS) for an RGBC.",
+      "options": [
+        "A. The applicant meets all statutory qualification and experience benchmarks specified under PNRC 38.",
+        "B. The applicant is disqualified because an RGBC AS must hold a minimum of 5 years of local post-qualification site experience if possessing a degree.",
+        "C. The applicant fails to meet the minimum experience benchmark, which requires not less than 3 years of relevant local post-qualification experience for recognized degree holders.",
+        "D. The applicant is qualified provided they complete a 40-hour top-up training course on the Site Safety Supervision Plan System."
+      ],
+      "correctIndex": 2,
+      "statutoryRef": "PNRC 38, Appendix B",
+      "rationale": "Under PNRC 38, the minimum qualification and experience benchmark for an AS of an RGBC requires a recognized degree in a relevant discipline (such as architecture, civil/structural/geotechnical/building engineering, or building surveying) plus a minimum of 3 years of relevant local post-qualification experience in Hong Kong (or a Higher Diploma/Certificate plus 5 years, with at least 3 years in HK)."
+    },
+    {
+      "id": 26,
+      "scenario": "Under the Code of Practice for Site Supervision, an RGBC is establishing the site supervision team for deep foundation works requiring Technically Competent Persons (TCPs). The project involves percussion driven H-piles.",
+      "options": [
+        "A. The Registered Contractor's Stream TCP-T1 must be a resident, full-time personnel based on the site during the execution of critical piling activities.",
+        "B. The contractor's AS can concurrently hold the role of TCP-T1 on three separate concurrent foundation sites in the same district.",
+        "C. A TCP-T3 from the Registered Structural Engineer (RSE) stream may concurrently be appointed as the TCP-T3 for the Registered Contractor's stream to reduce staff duplication.",
+        "D. The TCP-T1 of the contractor stream is legally permitted to approve material structural design amendments in the piling layout."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "Code of Practice for Site Supervision 2009 (SSPS Code) & PNRC 38",
+      "rationale": "Under the Site Supervision Plan System (SSPS Code), the Registered Contractor's stream requires TCP-T1 to carry out site supervision full-time and be permanently resident on site during the execution of the relevant specialized/critical building works. Cross-stream combination of roles (e.g. RSE stream TCP acting as RC stream TCP) is strictly prohibited to ensure independence of supervision."
+    },
+    {
+      "id": 27,
+      "scenario": "An RGBC has obtained consent to commence site formation works. The contractor intends to begin site clearance and earthmoving on 15 October. When is the latest date by which the Form BA 10 (Notice of Intention to Commence Building Works) must be received by the Building Authority?",
+      "options": [
+        "A. Not less than 24 hours before the intended commencement date (14 October).",
+        "B. Not less than 7 days before the intended commencement date (8 October).",
+        "C. Not less than 14 days before the intended commencement date (1 October).",
+        "D. Simultaneously with the arrival of heavy earthmoving machinery on site on 15 October."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Building (Administration) Regulations Reg. 26",
+      "rationale": "Regulation 26 of the Building (Administration) Regulations specifies that the registered contractor appointed to carry out building works shall deliver to the Building Authority a notice of intention to commence such works in the specified form (Form BA 10) not less than 7 days before the date on which it is intended to commence the works."
+    },
+    {
+      "id": 28,
+      "scenario": "A contractor plans to erect a heavy-duty working gantry spanning over a public footpath that will be utilized for the temporary storage of reinforcement bars and site offices during basement construction under PNRC 4.",
+      "options": [
+        "A. The gantry deck designed for material storage must be structurally designed to support a minimum imposed load of 10.0 kPa, equipped with a 1 m high continuous protective screen, and catch platform.",
+        "B. Public gantries can never be used for storage under any circumstances under Hong Kong law.",
+        "C. The gantry needs only to be designed for 2.5 kPa uniformly distributed load, provided a sign is erected stating 'Light Storage Only'.",
+        "D. Cantilevered gantries extending over carriageways require an absolute minimum vertical vehicular clearance of 3.5 m."
+      ],
+      "correctIndex": 0,
+      "statutoryRef": "PNRC 4, Appendix A & B(P)R Reg. 49",
+      "rationale": "PNRC 4 specifies that where a gantry over a public footpath is to be used for storage of building materials or site offices, it must be designed for a minimum superimposed live load of 10 kPa (or higher as required by engineering design). Suitable continuous imperforate hoardings, toe-boards, and robust catch screens/parapets of at least 1.0 m to 1.1 m high must be provided to prevent material displacement."
+    },
+    {
+      "id": 29,
+      "scenario": "During the audit of a site safety supervision plan for a major residential redevelopment, the Building Authority finds that the designated Registered Contractor TCP-T3 is also assigned as TCP-T3 for another concurrent project situated 5 km away.",
+      "options": [
+        "A. This arrangement is strictly barred; all TCPs under the RC stream must be 100% full-time resident on a single site without exception.",
+        "B. A TCP-T3 in the RC stream can supervise multiple sites provided the SSPS Code frequency requirements (e.g. periodic inspection) are satisfied and approved within the Supervision Plan without conflicting site inspection schedules.",
+        "C. TCP-T3 may supervise up to 10 sites across Hong Kong automatically without declaring this commitment in Form BA 10 or the Supervision Plan.",
+        "D. Multi-site appointment is only permissible if both sites belong to the same Authorized Person and Registered Structural Engineer."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "Code of Practice for Site Supervision 2009, Section 4 & 5",
+      "rationale": "Under the SSPS Code, unlike TCP-T1 (who is typically full-time resident on site during specific works), higher-level TCPs (such as T3, T4, and T5) have mandatory inspection frequencies defined on a periodic basis (e.g., weekly or bi-weekly). An individual can be nominated for more than one site provided their overall workload, traveling logistics, and inspection frequencies realistically permit full discharge of duties across the designated projects as detailed in the accepted Supervision Plan."
+    },
+    {
+      "id": 30,
+      "scenario": "An RGBC is carrying out open cut excavation alongside a sheet pile wall located 22 m from a ballast railway embankment within the Railway Protection Zone. Dewatering is running concurrently. The instrumentation detects a net groundwater drawdown of 2.2 m at the boundary piezometer, exceeding the pre-set Action Level drawdown of 1.5 m.",
+      "options": [
+        "A. The RGBC may continue dewatering at full capacity if the Authorized Person issues a verbal comfort letter to MTRCL.",
+        "B. The RGBC must immediately suspend dewatering operations, activate recharge wells/contingency measures, notify the BA and MTRCL, and not resume until approved mitigation is completed.",
+        "C. The contractor should recalibrate the piezometers to adjust the baseline level upwards so works can continue.",
+        "D. Piezometer Action level breaches within the RPZ do not require suspension unless the railway track experiences an instantaneous angular twist exceeding 1 in 100."
+      ],
+      "correctIndex": 1,
+      "statutoryRef": "PNRC 14 (Railway Protection) & SSPS Code",
+      "rationale": "Under PNRC 14 and agreed Railway Protection instrumentation response protocols, when an Action Level trigger (e.g., ground movement, track twist, or groundwater drawdown) is reached or exceeded, all related causative works (such as dewatering or excavation) must be suspended immediately. Pre-planned contingency measures (such as groundwater recharge or ground stabilization) must be initiated, and immediate notification given to the Building Authority and MTRCL."
+    }
+  ]
 }
