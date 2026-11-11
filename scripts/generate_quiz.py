@@ -2,7 +2,11 @@ import os
 import json
 import requests
 import time
+import sys
 from datetime import datetime, timezone, timedelta
+
+def log(msg):
+    print(msg, flush=True)
 
 def get_hong_kong_time():
     hk_tz = timezone(timedelta(hours=8))
@@ -22,8 +26,7 @@ def append_to_history(new_questions, history_file="history_log.txt"):
             snippet = q.get("scenario", "")[:60].replace("\n", " ")
             f.write(f"[{ref}] {snippet}\n")
 
-def call_gemini_with_retry(api_key, prompt, max_retries=5):
-    # Google 強制指定唯一模型
+def call_gemini_with_retry(api_key, prompt, max_retries=3):
     model_name = "gemini-3.8-flash"
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
 
@@ -37,86 +40,65 @@ def call_gemini_with_retry(api_key, prompt, max_retries=5):
 
     for attempt in range(1, max_retries + 1):
         try:
-            print(f"Calling {model_name} (Attempt {attempt}/{max_retries})...")
-            response = requests.post(url, json=payload, timeout=120)
+            log(f"Calling Google Gemini API (Attempt {attempt}/{max_retries})...")
+            # 設置嚴格逾時：連線 10 秒，讀取 60 秒
+            response = requests.post(url, json=payload, timeout=(10, 60))
             
-            # 若遇 503（高峰繁忙）或 429（限流），採取漸進式等待重試
             if response.status_code in [429, 503]:
-                wait_sec = attempt * 5  # 5s, 10s, 15s, 20s
-                print(f"Google Server busy [{response.status_code}]. Waiting {wait_sec} seconds before retry...")
+                wait_sec = attempt * 5
+                log(f"Server busy [{response.status_code}]. Waiting {wait_sec}s...")
                 time.sleep(wait_sec)
                 continue
 
             if response.status_code == 200:
                 result = response.json()
                 raw_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
+                log("Received response successfully.")
                 return json.loads(raw_text).get("questions", [])
             else:
-                print(f"HTTP Error {response.status_code}: {response.text}")
-                time.sleep(5)
+                log(f"HTTP Error {response.status_code}: {response.text}")
+                time.sleep(3)
 
         except requests.exceptions.Timeout:
-            print(f"Request timeout on attempt {attempt}, retrying...")
-            time.sleep(5)
+            log(f"Timeout on attempt {attempt}, retrying...")
+            time.sleep(3)
         except Exception as e:
-            print(f"Unexpected error: {e}")
-            time.sleep(5)
+            log(f"Error: {e}")
+            time.sleep(3)
 
-    raise Exception(f"Failed to generate questions after {max_retries} attempts.")
+    raise Exception("Failed after maximum retries.")
 
 def generate_batch(api_key, past_topics, batch_num, start_id):
     if batch_num == 1:
-        syllabus = """
-1. Buildings Ordinance (Cap. 123) Core Duties & Criminal Liabilities (8 Questions):
-   - Section 9: Continuous supervision, Section 9(5)(b) mandatory notification of material divergences/defects.
-   - Section 14(1) & Section 17: Consent validity (3 months), proof drilling and site conditions.
-   - Section 21: Statutory grounds for refusing an Occupation Permit (OP).
-   - Orders & Criminal penalties: Section 23 (Cease Works), Section 24 (UBW Demolition), Section 24A, Section 40(1AA), Section 40(2A), Section 40(2B).
-2. Statutory Specified Forms & Lifecycles (7 Questions):
-   - Forms BA8, BA10 (minimum 7-day prior notice), BA12, BA13, BA14, BA14A.
-   - Minor Works Control System (MWCS): Class I, II, III criteria and forms MW01 through MW06.
-"""
+        syllabus = "Cap. 123 (s.9, s.14, s.17, s.21, s.23, s.40) & Forms BA8, BA10, BA12, BA13, BA14, BA14A, MWCS."
     else:
-        syllabus = """
-3. Subsidiary Regulations & Engineering Standards (8 Questions):
-   - Building (Administration) Regulations: Reg. 10 (statutory records on site), Reg. 11 (minimum 12 months record retention), Reg. 26 (continuous supervision), Reg. 27 (resumption notice after >2 months suspension).
-   - Building (Planning) Regulations: Part IX temporary structures, Means of Escape (MOE) clear widths.
-   - Building (Demolition Works) Regulations: Intermediate slab debris limits, cantilevered catch platforms.
-4. Practice Notes for Registered Contractors (PNRC) & Safety Supervision (SSPS) (7 Questions):
-   - PNRC 4: Hoardings and covered walkways (minimum 2.5m clear headroom, 1.1m clear width).
-   - PNRC 14: Railway Protection Zone (RPZ) Alert (20mm), Alarm, Action triggers and MTRC consultation.
-   - PNRC 38: Qualification pathways, sole AS resignation (mandatory immediate stop work).
-   - PNAP APP-55 / PNRC 52: Minor Amendment criteria vs unauthorized material divergence.
-   - SSPS Code: Contractor Stream TCP grades (T1 to T5), logbook maintenance, strict ban on cross-stream concurrent appointments.
-"""
+        syllabus = "B(A)R (Reg. 10, 11, 26, 27), PNRC 4, PNRC 14, PNRC 38, PNRC 52, SSPS Code (TCP streams)."
 
     prompt = f"""
-You are a senior Chief Building Surveyor at the Hong Kong Buildings Department (BD) and an expert examiner for the Contractors Registration Committee (CRC).
-Generate exactly 15 high-difficulty, realistic, scenario-based Multiple Choice questions in English for the RGBC Authorized Signatory (AS) Examination.
+You are an examiner for the HK Buildings Department RGBC Authorized Signatory MC exam (under PNRC 38 Appendix P).
+Generate exactly 15 scenario-based Multiple Choice questions in English for questions {start_id} to {start_id + 14}.
 
-All questions, scenarios, options, and rationales MUST BE IN ENGLISH.
-
-Syllabus Focus for this batch (Questions {start_id} to {start_id + 14}):
+Syllabus Focus:
 {syllabus}
 
-Do NOT repeat these recently tested scenarios:
+Do not repeat:
 {past_topics}
 
-Return STRICT JSON ONLY (no markdown formatting, no ```json):
+Format: Return strictly a JSON object with a 'questions' array. No markdown code blocks.
 {{
   "questions": [
     {{
       "id": {start_id},
-      "scenario": "A 2-3 sentence realistic site dilemma in English...",
+      "scenario": "A 2-sentence site dilemma in English...",
       "options": [
-        "A. First plausible option in English",
-        "B. Second plausible option in English",
-        "C. Third plausible option in English",
-        "D. Fourth plausible option in English"
+        "A. First plausible option",
+        "B. Second plausible option",
+        "C. Third plausible option",
+        "D. Fourth plausible option"
       ],
       "correctIndex": 1,
-      "statutoryRef": "Exact statutory section/regulation code (e.g. BO Section 9(5)(b))",
-      "rationale": "Clear legal rationale in English explaining the statutory reason."
+      "statutoryRef": "BO Section 9(5)(b)",
+      "rationale": "Legal rationale in English."
     }}
   ]
 }}
@@ -126,25 +108,22 @@ Return STRICT JSON ONLY (no markdown formatting, no ```json):
 def main():
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("CRITICAL ERROR: GEMINI_API_KEY environment variable is missing!")
-        return
+        log("CRITICAL ERROR: GEMINI_API_KEY is missing!")
+        sys.exit(1)
 
     hk_now = get_hong_kong_time()
-    hour = hk_now.hour
     date_str = hk_now.strftime("%Y-%m-%d")
-    
-    if 8 <= hour < 18:
-        session_label = f"Morning Simulation Paper ({date_str} 08:00 HKT)"
-    else:
-        session_label = f"Evening Simulation Paper ({date_str} 18:00 HKT)"
+    session_label = f"Morning Paper ({date_str} 08:00 HKT)" if 8 <= hk_now.hour < 18 else f"Evening Paper ({date_str} 18:00 HKT)"
 
+    log(f"Starting generation for {session_label}...")
     past_topics = load_history_summary()
 
-    print(f"Starting Generation for {session_label}...")
+    log("Generating Batch 1 (Questions 1-15)...")
     batch_1 = generate_batch(api_key, past_topics, batch_num=1, start_id=1)
     
-    time.sleep(3)
+    time.sleep(2)
 
+    log("Generating Batch 2 (Questions 16-30)...")
     batch_2 = generate_batch(api_key, past_topics, batch_num=2, start_id=16)
 
     all_questions = []
@@ -163,7 +142,7 @@ def main():
         json.dump(quiz_data, f, ensure_ascii=False, indent=2)
 
     append_to_history(all_questions)
-    print(f"Completed! 30 English questions successfully written into current_quiz.json.")
+    log("Done! 30 questions saved to current_quiz.json.")
 
 if __name__ == "__main__":
     main()
