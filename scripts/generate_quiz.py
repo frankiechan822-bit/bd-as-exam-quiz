@@ -26,7 +26,7 @@ def append_to_history(new_questions, history_file="history_log.txt"):
 
 def call_gemini_api(api_key, past_topics, session_label):
     # Using Gemini 2.5 Flash endpoint
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
     
     # Prompt explicitly enforcing ENGLISH questions, scenarios, choices, and rationales
     system_prompt = f"""
