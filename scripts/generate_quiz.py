@@ -121,7 +121,7 @@ def main():
     else:
         session_label = f"Evening Simulation Paper ({date_str} 18:00 HKT)"
 
-    print(f"Triggering Gemini 2.5 Flash for [{session_label}]...")
+    print(f"Triggering Gemini 3.8 Flash for [{session_label}]...")
     past_topics = load_history_summary()
     
     quiz_data = call_gemini_api(api_key, past_topics, session_label)
