@@ -1474,23 +1474,6 @@
   }
 }
 
-        // 重設計時器為 45 分鐘
-        if (typeof resetTimer === "function") {
-          resetTimer(45 * 60);
-        }
-
-        if (statusEl) {
-          statusEl.innerText = `Updated: ${data.updated_at || 'Just now'} (${data.questions ? data.questions.length : 30} Qs)`;
-          setTimeout(() => { statusEl.innerText = ""; }, 6000);
-        }
-        if (isManual) alert("Quiz reloaded successfully!");
-      } catch (err) {
-        console.error(err);
-        if (statusEl) statusEl.innerText = "Error reloading quiz.";
-        alert("Failed to load current_quiz.json. Ensure it exists in the repository.");
-      }
-    }
-
     // 2. 透過 GitHub REST API 直接觸發 Actions 跑 Python 腳本出題
     async function triggerWorkflowDispatch() {
       let token = localStorage.getItem('GH_DISPATCH_TOKEN');
