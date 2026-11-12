@@ -1445,34 +1445,17 @@
         if (q) selectOption(q.id, optionIndex);
       }
     }
-    // 1. 強制重載最新考題並重設計時器（繞過瀏覽器快取）
-   async function reloadQuiz(isManual = false) {
-  const statusEl = document.getElementById('update-status');
-  if (statusEl) statusEl.innerText = "Fetching latest questions...";
-
-  try {
-    // 加上 ?t=時間戳，強迫瀏覽器每次都向 GitHub 伺服器要最新檔案，杜絕讀取舊快取
-    const res = await fetch(`current_quiz.json?t=${new Date().getTime()}`, {
-      cache: "no-store"
-    });
     
-    if (!res.ok) throw new Error("Failed to load current_quiz.json");
+    // 1. 強制清除快取並重新載入最新考卷
+    function reloadQuiz(isManual = false) {
+      const statusEl = document.getElementById('update-status');
+      if (statusEl) statusEl.innerText = "Reloading latest exam paper...";
 
-    const data = await res.json();
-    
-    // 重新渲染題目並重設定時器
-    renderQuiz(data);
-    resetTimer(45 * 60);
-
-    if (statusEl) {
-      statusEl.innerText = `Updated at: ${data.updated_at || 'Just now'}`;
+      // 透過網址加上最新時間戳記，強迫瀏覽器繞過快取並重新執行網頁初始化讀取最新 current_quiz.json
+      const url = new URL(window.location.href);
+      url.searchParams.set('t', new Date().getTime());
+      window.location.href = url.toString();
     }
-    if (isManual) alert("Quiz refreshed with latest version!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to reload quiz.");
-  }
-}
 
     // 2. 透過 GitHub REST API 直接觸發 Actions 跑 Python 腳本出題
     async function triggerWorkflowDispatch() {
