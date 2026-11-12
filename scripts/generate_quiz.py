@@ -27,7 +27,7 @@ def append_to_history(new_questions, history_file="history_log.txt"):
             f.write(f"[{ref}] {snippet}\n")
 
 def call_gemini_with_retry(api_key, prompt, max_retries=3):
-    model_name = "gemini-2.5-flash"
+    model_name = "gemini-3.8-flash"
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
 
     payload = {
